@@ -1,0 +1,45 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-banco" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Modificar datos bancarios</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height:200px">
+                    <div class="form-group row">
+                            <div class="col-sm-7">
+                                Banco<input type="text" class="form-control" id="txtBanco" name="txtBanco" placeholder="Banco" >
+                            </div>
+                    </div>
+					<div class="form-group row">
+                            <div class="col-sm-7">
+                                Cuenta<input type="text" class="form-control" id="txtCuenta" name="txtCuenta" placeholder="Cuenta" >
+                            </div>
+                    </div>
+					<div class="form-group row">
+                            <div class="col-sm-7">
+                                Clabe<input type="text" class="form-control" id="txtClabe" name="txtClabe" placeholder="Clabe" >
+                            </div>
+                    </div>
+                    <div class="form-group">
+
+					</div>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="save_edit_banco();">Modificar</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

@@ -1,0 +1,280 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Providers | FortaIngeneiria.</title>
+	<link rel="shortcut icon" href="{% static ''%}img/icono.png" type="image/x-png">
+	<!--STYLESHEET-->
+	<!--=================================================-->
+	<!--Open Sans Font [ OPTIONAL ] -->
+ 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
+	<!--Bootstrap Stylesheet [ REQUIRED ]-->
+	<link href="{% static ''%}css/bootstrap.min.css" rel="stylesheet">
+	<!--Nifty Stylesheet [ REQUIRED ]-->
+	<link href="{% static ''%}css/nifty.min.css" rel="stylesheet">
+	<!--Font Awesome [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<!--Switchery [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/switchery/switchery.min.css" rel="stylesheet">
+	<!--Animate.css [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/animate-css/animate.min.css" rel="stylesheet">
+	<!--Switchery [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/switchery/switchery.min.css" rel="stylesheet">
+	<!--Bootstrap Select [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+	<!--Demo [ DEMONSTRATION ]-->
+	<link href="{% static ''%}css/demo/nifty-demo.min.css" rel="stylesheet">
+	<!--SCRIPT-->
+	<!--=================================================-->
+	<!--Page Load Progress Bar [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/pace/pace.min.css" rel="stylesheet">
+	<script src="{% static ''%}plugins/pace/pace.min.js"></script>
+	<script src="{% static ''%}js/security.js"></script>
+	<script>
+		security({{ request.session.IdUser }});
+	</script>
+</head>
+<!--TIPS-->
+<!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
+<body>
+	<div id="container" class="effect mainnav-out">
+
+		<!--NAVBAR-->
+		<!--===================================================-->
+		<header id="navbar">
+			<div id="navbar-container" class="boxed">
+
+				<!--Brand logo & name-->
+				<!--================================-->
+				<div class="navbar-header">
+					<a href="index.html" class="navbar-brand">
+						<!--<img src="img/logo.png" alt="Nifty Logo" class="brand-icon">-->
+						<div class="brand-title">
+							<span class="brand-text">Forta</span>
+						</div>
+					</a>
+				</div>
+					{% include 'base/menu.html' %}
+			</div>
+		</header>
+		<!--===================================================-->
+		<!--END NAVBAR-->
+
+		<div class="boxed">
+
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+			<div id="page-title">
+					<h1 class="page-header text-overflow">Proveedores</h1>
+
+					<!--Searchbox-->
+					<div class="searchbox">
+						<div class="input-group custom-search-form">
+							<input type="text" id="txtSearchProvider" name="txtSearchProvider" class="form-control" placeholder="Search..">
+							<span class="input-group-btn">
+								<button class="text-muted" type="button" onclick="search_provider();"><i class="fa fa-search"></i></button>
+							</span>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-sm-6 col-sm-offset-3">
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Nuevo Proveedor</h3>
+								</div>
+
+								<!--Horizontal Form-->
+								<!--===================================================-->
+								<form id="frmProveeders" name="frmProveedersfrmLo" action="" method="post" class="form-horizontal">
+									{% csrf_token %}
+									{{ form.errors }}
+									{{ form.non_field_errors }}
+									<div class="panel-body">
+										<div class="form-group">
+											<label class="col-sm-3 control-label" >Proveedor</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtProvider" name="txtProvider" placeholder="Proveedor" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">RFC</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtRFC" name="txtRFC" placeholder="RFC" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Banco</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtBanco" name="txtBanco" placeholder="Banco" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Sucursal</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtSucursal" name="txtSucursal" placeholder="Sucursal" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Cuenta</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtCuenta" name="txtCuenta" placeholder="Cuenta" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Clabe</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtClabe" name="txtClabe" placeholder="Clabe" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Referencia</label>
+											<div class="col-sm-9">
+												<input type="text" class="form-control" id="txtReferencia" name="txtReferencia" placeholder="Referencia" >
+											</div>
+										</div>
+									</div>
+									<div class="panel-footer text-right">
+										<button class="btn btn-info" type="button" onclick="validate_form();">Guardar</button>
+									</div>
+								</form>
+								<!--===================================================-->
+								<!--End Horizontal Form-->
+
+							</div>
+						</div>
+				</div>
+				<div class="row">
+						<div class="col-sm-6 col-sm-offset-3" id="DivContainer" style="display:none">
+							<div class="panel">
+								<div class="panel-heading">
+					                <div class="panel-control"  onclick="Cerrar_tap();">
+					                   <span style="cursor:pointer">Close</span>
+					                </div>
+					                <h3 class="panel-title">Proveedores encontrados</h3>
+					            </div>
+
+
+
+								<!--Condensed Table-->
+								<!--===================================================-->
+								<div class="panel-body">
+									<table class="table  table-condensed">
+											<thead>
+												<tr>
+													<th>Proveedor</th>
+													<th>Proyectos</th>
+													<th>Editar</th>
+												</tr>
+											</thead>
+											<tbody id="tbSearch">
+
+											</tbody>
+									</table>
+								</div>
+								<!--===================================================-->
+								<!--End Condensed Table-->
+
+							</div>
+						</div>
+				</div>
+			</div>
+			<!--===================================================-->
+			<!--END CONTENT CONTAINER-->
+
+
+
+			<!--MAIN NAVIGATION-->
+			<!--===================================================-->
+			<nav id="mainnav-container">
+
+			</nav>
+			<!--===================================================-->
+			<!--END MAIN NAVIGATION-->
+
+			<!--ASIDE-->
+			<!--===================================================-->
+
+			<!--===================================================-->
+			<!--END ASIDE-->
+		</div>
+		<!-- FOOTER -->
+		<!--===================================================-->
+		<footer id="footer">
+
+			<!-- Visible when footer positions are fixed -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<div class="show-fixed pull-right">
+				<ul class="footer-list list-inline">
+					<li>
+						<p class="text-sm">SEO Proggres</p>
+						<div class="progress progress-sm progress-light-base">
+							<div style="width: 80%" class="progress-bar progress-bar-danger"></div>
+						</div>
+					</li>
+
+					<li>
+						<p class="text-sm">Online Tutorial</p>
+						<div class="progress progress-sm progress-light-base">
+							<div style="width: 80%" class="progress-bar progress-bar-primary"></div>
+						</div>
+					</li>
+					<li>
+						<button class="btn btn-sm btn-dark btn-active-success">Checkout</button>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Visible when footer positions are static -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<div class="hide-fixed pull-right pad-rgt">Currently v1.0</div>
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- Remove the class name "show-fixed" and "hide-fixed" to make the content always appears. -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+			<p class="pad-lft">
+				{% now "Y" as current_year %}
+				Copyright {{ current_year }} Forta Ingenieria
+			</p>
+
+		</footer>
+
+		<!--===================================================-->
+		<!-- END FOOTER -->
+		<!-- SCROLL TOP BUTTON -->
+		<!--===================================================-->
+		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
+		<!--===================================================-->
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+	{% include 'base/modal_box_edit_provider.html' %}
+    <!--JAVASCRIPT-->
+	<!--=================================================-->
+    <!--jQuery [ REQUIRED ]-->
+	<script src="{% static ''%}js/jquery-2.1.1.min.js"></script>
+	<!--BootstrapJS [ RECOMMENDED ]-->
+	<script src="{% static ''%}js/bootstrap.min.js"></script>
+	<!--Fast Click [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/fast-click/fastclick.min.js"></script>
+	<!--Nifty Admin [ RECOMMENDED ]-->
+	<script src="{% static ''%}js/nifty.min.js"></script>
+	<!--Switchery [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/switchery/switchery.min.js"></script>
+	<!--Bootstrap Select [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/bootstrap-select/bootstrap-select.min.js"></script>
+	<!--Bootbox Modals [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/bootbox/bootbox.min.js"></script>
+	<!--Demo script [ DEMONSTRATION ]-->
+	<script src="{% static ''%}js/demo/nifty-demo.min.js"></script>
+	<!--Modals [ SAMPLE ]-->
+	<script src="{% static ''%}js/demo/ui-modals.js"></script>
+	<!-- own script -->
+	<script src="{% static ''%}js/proveedores.js"></script>
+	<script src="{% static ''%}js/msj.js"></script>
+</body>
+</html>

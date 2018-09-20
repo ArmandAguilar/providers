@@ -1,0 +1,79 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-edit" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Editar Contrato</h4>
+				</div>
+
+
+				<!--Modal body-->
+				<div class="modal-body" style="height:430px">
+
+        <div class="form-group">
+          <label class="col-sm-3 control-label">Contrato</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="txtEditContrato" name="txtEditContrato">
+			  <input type="hidden" class="form-control" id="txtEditId" name="txtEditId">
+          </div>
+        </div>
+		<div class="form-group">
+          <label class="col-sm-3 control-label">Monto</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="txtMontoEdit" name="txtMontoEdit" style="width:110px">
+          </div>
+        </div>
+		<div class="form-group">
+          <label class="col-sm-3 control-label">Iva</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" id="txtIvaEdit" name="txtIvaEdit" style="width:110px">
+          </div>
+        </div>
+		<div class="form-group">
+			<label class="col-lg-3 control-label">Proveedor</label>
+			<div class="col-sm-9">
+				<div class="input-group mar-btm">
+						<input type="text" name = 'txtSearchProviderEdit' id = 'txtSearchProviderEdit' placeholder="Buscar ..." class="form-control">
+						<span class="input-group-btn">
+							<button class="btn btn-info btn-labeled fa fa-search" type="button" onclick="search_provider_edit();">Buscar</button>
+						</span>
+				</div>
+			</div>
+		</div>
+
+		<input type="hidden" id="txtIdProviderEdit" name="txtIdProviderEdit">
+		<div id="tbSearchEdit" style="display:none">
+				<table class="table  table-condensed">
+					<thead>
+						<tr>
+							<th>Proveedor</th>
+							<th>Selecionar</th>
+						</tr>
+					</thead>
+					<tbody id="tbmodalbox">
+
+					</tbody>
+				</table>
+		</div>
+
+        </div>
+
+
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="save_edit();">Guardar</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

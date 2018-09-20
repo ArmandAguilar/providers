@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-bills" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Cambiar estado de factura</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height: 140px">
+                    <center>
+                        <h4>¿Esta Factura fue pagada?</h4>
+                        <input type="hidden" id="txtIdBills" name="txtIdBills" />
+						<input type="hidden" id="txtFactura" name="txtFactura" />
+						<input type="hidden" id="txtImporte" name="txtImporte" />
+						<input type="hidden" id="txtIva" name="txtIva" />
+						<input type="hidden" id="txtTrigger" name="txtTrigger" />
+						<div id="DivSelect" name="DivSelect"></div>
+                    </center>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="update_status_pay();">Asignar</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

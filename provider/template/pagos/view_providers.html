@@ -1,0 +1,425 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Providers | FortaIngeneiria.</title>
+	<link rel="shortcut icon" href="{% static ''%}img/icono.png" type="image/x-png">
+	    <!--STYLESHEET-->
+	<!--=================================================-->
+	<!--Open Sans Font [ OPTIONAL ] -->
+ 	<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin" rel="stylesheet">
+	<!--Bootstrap Stylesheet [ REQUIRED ]-->
+	<link href="{% static ''%}css/bootstrap.min.css" rel="stylesheet">
+	<!--Nifty Stylesheet [ REQUIRED ]-->
+	<link href="{% static ''%}css/nifty.min.css" rel="stylesheet">
+	<!--Font Awesome [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<!--Switchery [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/switchery/switchery.min.css" rel="stylesheet">
+	<!--Bootstrap Select [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/bootstrap-select/bootstrap-select.min.css" rel="stylesheet">
+	<!--Bootstrap Datepicker [ OPTIONAL ]-->
+    <link href="{% static ''%}plugins/bootstrap-datepicker/bootstrap-datepicker.css" rel="stylesheet">
+	<!--FooTable [ OPTIONAL ]-->
+    <link href="{% static ''%}plugins/fooTable/css/footable.core.css" rel="stylesheet">
+	<!--SCRIPT-->
+	<!--=================================================-->
+	<!--Page Load Progress Bar [ OPTIONAL ]-->
+	<link href="{% static ''%}plugins/pace/pace.min.css" rel="stylesheet">
+	<script src="{% static ''%}plugins/pace/pace.min.js"></script>
+	<script src="{% static ''%}js/security.js"></script>
+	<script>
+		security({{ request.session.IdUser }});
+	</script>
+
+
+
+</head>
+<!--TIPS-->
+<!--You may remove all ID or Class names which contain "demo-", they are only used for demonstration. -->
+<body>
+	<div id="container" class="effect mainnav-out">
+
+		<!--NAVBAR-->
+		<!--===================================================-->
+		<header id="navbar">
+			<div id="navbar-container" class="boxed">
+
+				<!--Brand logo & name-->
+				<!--================================-->
+				<div class="navbar-header">
+					<a href="index.html" class="navbar-brand">
+						<!--<img src="img/logo.png" alt="Nifty Logo" class="brand-icon">-->
+						<div class="brand-title">
+							<span class="brand-text">Forta</span>
+						</div>
+					</a>
+				</div>
+					{% include 'base/menu.html' %}
+			</div>
+		</header>
+		<!--===================================================-->
+		<!--END NAVBAR-->
+
+		<div class="boxed">
+
+			<!--CONTENT CONTAINER-->
+			<!--===================================================-->
+			<div id="content-container">
+
+			<div id="page-content">
+				<!-- Here block for  calender of pays -->
+				<div class="panel">
+						<div class="panel-heading">
+							<div class="panel-control">
+					                    <button class="demo-panel-ref-btn btn btn-default" data-target="#demo-panel-ref" data-toggle="panel-overlay">
+					                        <i class="demo-psi-repeat-2 icon-fw"></i> Vistas
+					                    </button>
+					                    <div class="btn-group">
+					                        <button data-toggle="dropdown" class="dropdown-toggle btn" aria-expanded="false">
+					                            <i class="caret"></i>
+					                        </button>
+					                        <ul class="dropdown-menu dropdown-menu-right">
+					                            <li onclick="cal();"><a href="#">Calendario</a></li>
+					                            <li onclick="providers();"><a href="#">Proveedores</a></li>
+					                        </ul>
+					                    </div>
+					                </div>
+							<h3 class="panel-title"><b>Pago a proveedores</b></h3>
+						</div>
+						<div class="panel-body">
+							<form name="frmDashboard" id="frmDashboard" method="post">
+							{% csrf_token %}
+							{{ form.errors }}
+							{{ form.non_field_errors }}
+							<div id="DivCalendario" style="display:none">
+									<div class="row">
+										<div class="well">
+											<div class="form-inline">
+												<div class="form-group">
+													<select id="CboMes" name="CboMes" class="selectpicker" data-live-search="true"  style="display: none;">
+														<option value="0">--------Mes-------</option>
+														<option value="1">Enero</option>
+														<option value="2">Febrero</option>
+														<option value="3">Marzo</option>
+														<option value="4">Abril</option>
+														<option value="5">Mayo</option>
+														<option value="6">Junio</option>
+														<option value="7">Julio</option>
+														<option value="8">Agosto</option>
+														<option value="9">Septiembre</option>
+														<option value="10">Octubre</option>
+														<option value="11">Novimbre</option>
+														<option value="12">Diciembre</option>
+													</select>
+												</div>
+												<div class="form-group">
+													<input type="text" id="txtYear" name="txtYear" placeholder="año" class="form-control" style="width:90px;">
+												</div>
+												<div class="form-group">
+													<button type="button" class="btn btn-primary" onclick="load();">Buscar</button>
+												</div>
+											</div>
+										</div>
+									</div>
+									<p></p>
+									<div id="DashBoardContainer" >
+											<div class="row">
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2" >
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-primary">
+														<div class="media-body">
+															<p class="mar-no">0000-00-00</p>
+														</div>
+													</div>
+												</div>
+
+											</div>
+											<div class="row">
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2" >
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+												<div class="col-sm-2">
+													<div class="panel media pad-all bg-purple">
+														<div class="media-body">
+															<p class="mar-no">Intel</p>
+															<p class="mar-no">Contrato: 0001</p>
+															<p class="mar-no">Factura: A0001</p>
+															<p class="mar-no">Monto: $1,000</p>
+														</div>
+													</div>
+												</div>
+
+											</div>
+									</div>
+							</div>
+							<div id="DivProveedores">
+								<div class="row">
+									<div class="well">
+										<div class="form-inline">
+											<div class="form-group">
+												<input type="text" id="txtProviders" name="txtProviders" placeholder="proveedor..." class="form-control" style="width:250px;"/>
+											</div>
+											<div class="form-group">
+												<input type="text" id="txtFactura" name="txtFactura" placeholder="factura..." class="form-control" style="width:200px;"/>
+											</div>
+											<div class="form-group">
+												<input type="text" id="txtProyecto" name="txtProyecto" placeholder="No Proyecto..." class="form-control" style="width:120px;"/>
+											</div>
+					            			<button type="button" class="btn btn-primary" onclick="seek_providers();">Buscar</button>
+					        			</div>
+									</div>
+								</div>
+								<div class="row">
+										<div class="panel">
+												<!-- Foo Table - Pagination -->
+												<!--===================================================-->
+												<div class="panel-body">
+															<label class="form-inline">Show
+																<select id="demo-show-entries" class="form-control input-sm">
+																	<option value="5">5</option>
+																	<option value="10">10</option>
+																	<option value="15">15</option>
+																	<option value="20">20</option>
+																</select>
+																entries
+															</label>
+															<div id="DivTbodyCon">
+															<table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">
+																<thead>
+																	<tr>
+																		<th data-toggle="true">Proveedor</th>
+																		<th>Contrato</th>
+																		<th data-hide="all">Lider</th>
+																		<th data-hide="all">Factura</th>
+																		<th data-hide="all">Monto</th>
+																		<th data-hide="all">Pagar</th>
+																	</tr>
+																</thead>
+																<tbody>
+																	<tr>
+																		<td>Microsoft</td>
+																		<td>C-001</td>
+																		<td>Armando Aguilar L.</td>
+																		<td>F-234AL</td>
+																		<td>$1,000</td>
+																		<td>2018-01-01</td>
+																	</tr>
+
+
+																</tbody>
+																<tfoot>
+																	<tr>
+																		<td colspan="5">
+																			<div class="text-right">
+																				<ul class="pagination"></ul>
+																			</div>
+																		</td>
+																	</tr>
+																</tfoot>
+															</table>
+																</div>
+												</div>
+												<!--===================================================-->
+												<!-- End Foo Table - Pagination -->
+					        			</div>
+								</div>
+							</div>
+
+							</form>
+						</div>
+				</div>
+				</div>
+				<!-- End block calender -->
+
+			</div>
+			<!--===================================================-->
+			<!--END CONTENT CONTAINER-->
+
+
+
+			<!--MAIN NAVIGATION-->
+			<!--===================================================-->
+			<nav id="mainnav-container">
+
+			</nav>
+			<!--===================================================-->
+			<!--END MAIN NAVIGATION-->
+
+			<!--ASIDE-->
+			<!--===================================================-->
+
+			<!--===================================================-->
+			<!--END ASIDE-->
+		</div>
+		<!-- FOOTER -->
+		<!--===================================================-->
+		<footer id="footer">
+
+			<!-- Visible when footer positions are fixed -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<div class="show-fixed pull-right">
+				<ul class="footer-list list-inline">
+					<li>
+						<p class="text-sm">SEO Proggres</p>
+						<div class="progress progress-sm progress-light-base">
+							<div style="width: 80%" class="progress-bar progress-bar-danger"></div>
+						</div>
+					</li>
+
+					<li>
+						<p class="text-sm">Online Tutorial</p>
+						<div class="progress progress-sm progress-light-base">
+							<div style="width: 80%" class="progress-bar progress-bar-primary"></div>
+						</div>
+					</li>
+					<li>
+						<button class="btn btn-sm btn-dark btn-active-success">Checkout</button>
+					</li>
+				</ul>
+			</div>
+
+			<!-- Visible when footer positions are static -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<div class="hide-fixed pull-right pad-rgt">Currently v1.0</div>
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+			<!-- Remove the class name "show-fixed" and "hide-fixed" to make the content always appears. -->
+			<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+			<p class="pad-lft">
+				{% now "Y" as current_year %}
+				Copyright {{ current_year }} Forta Ingenieria
+			</p>
+
+		</footer>
+
+		<!--===================================================-->
+		<!-- END FOOTER -->
+		<!-- SCROLL TOP BUTTON -->
+		<!--===================================================-->
+		<button id="scroll-top" class="btn"><i class="fa fa-chevron-up"></i></button>
+		<!--===================================================-->
+	</div>
+	<!--===================================================-->
+	<!-- END OF CONTAINER -->
+	{% include 'base/modal_box_pagos_calendar.html' %}
+	{% include 'base/modal_box_pagos_bills.html' %}
+	{% include 'base/modal_box_pagos_cancel.html' %}
+    <!--JAVASCRIPT-->
+    <!--=================================================-->
+
+    <!--jQuery [ REQUIRED ]-->
+	<script src="{% static ''%}js/jquery-2.1.1.min.js"></script>
+	<!--BootstrapJS [ RECOMMENDED ]-->
+	<script src="{% static ''%}js/bootstrap.min.js"></script>
+	<!--Fast Click [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/fast-click/fastclick.min.js"></script>
+	<!--Nifty Admin [ RECOMMENDED ]-->
+	<script src="{% static ''%}js/nifty.min.js"></script>
+	<!--Switchery [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/switchery/switchery.min.js"></script>
+	<!--Bootstrap Select [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/bootstrap-select/bootstrap-select.min.js"></script>
+	<!--Bootbox Modals [ OPTIONAL ]-->
+	<script src="{% static ''%}plugins/bootbox/bootbox.min.js"></script>
+	<!--Demo script [ DEMONSTRATION ]-->
+	<script src="{% static ''%}js/demo/nifty-demo.min.js"></script>
+	<!--Modals [ SAMPLE ]-->
+	<script src="{% static ''%}js/demo/ui-modals.js"></script>
+	<!--Bootstrap Datepicker [ OPTIONAL ]-->
+    <script src="{% static ''%}plugins/bootstrap-datepicker/bootstrap-datepicker.js"></script>
+		<!--FooTable [ OPTIONAL ]-->
+    <script src="{% static ''%}plugins/fooTable/dist/footable.all.min.js"></script>
+	<!--FooTable Example [ SAMPLE ]-->
+    <!--<script src="{% static ''%}js/demo/tables-footable.js"></script>-->
+	<!-- own script -->
+	<script src="{% static ''%}js/pagos.js"></script>
+	<script src="{% static ''%}js/reload_table_foot.js"></script>
+	<script src="{% static ''%}js/msj.js"></script>
+
+</body>
+</html>

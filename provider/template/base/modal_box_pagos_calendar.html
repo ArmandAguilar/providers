@@ -1,0 +1,36 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-calendar" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Cambiar fecha de pago</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height: 240px">
+                    <center>
+                        <h4>Seleciona una nuecva fecha</h4>
+                        <input type="hidden" id="txtIdDate" name="txtIdDate" />
+						<input type="hidden" id="txtTrigger" name="txtTrigger" />
+                        <div class="input-group mar-btm">
+                                <input type="text" name="txtFechaPago" id="txtFechaPago" placeholder="0000-00-00" class="form-control">
+                        </div>
+                    </center>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="update_date_pay();">Guardar</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

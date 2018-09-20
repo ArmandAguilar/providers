@@ -1,0 +1,378 @@
+$(document).ready(function() {
+
+	// BOOTSTRAP DATEPICKER WITH AUTO CLOSE
+    // =================================================================
+    // Require Bootstrap Datepicker
+    // http://eternicode.github.io/bootstrap-datepicker/
+    // =================================================================
+    $('#txtFechaPago').datepicker({
+    autoclose:true,
+    format: "yyyy-mm-dd"
+    });
+
+});
+function load()
+{
+    var simpleDate = new Date();
+    var month = simpleDate.getMonth() + 1;
+    var year = simpleDate.getFullYear();
+
+    if ($("#CboMes option:selected").val() == 0)
+     {
+
+     }
+     else{
+            month = $("#CboMes option:selected").val();
+     }
+     if ($("input[name=txtYear]").val() == '')
+     {
+
+     }
+     else{
+            year = $("input[name=txtYear]").val();
+     }
+    $("#DashBoardContainer").empty();
+     $.ajax({
+                type:'POST',
+                url: '/pagos/dashboard/',
+                data:{
+                        CboMes:month,
+                        txtYear:year,
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                   $("#DashBoardContainer").append(data);
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+              });
+}
+/*Here set Id for channge date */
+function setIdForDate(id,date,trigger)
+{
+    $("#txtIdDate").val('');
+    $("#txtIdDate").val(id);
+    $("#txtFechaPago").val('');
+    $("#txtFechaPago").val(date);
+    $("#txtTrigger").val('');
+    $("#txtTrigger").val(trigger);
+
+}
+
+
+function update_date_pay()
+{
+    $.ajax({
+                type:'POST',
+                url: '/pagos/update/fechapago/',
+                data:{
+                        txtIdDate:$("input[name=txtIdDate]").val(),
+                        txtFechaPago:$("input[name=txtFechaPago]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                  if (data >= 1)
+                     {
+                        msjSucces('La fecha fue cambia con exito !');
+                        if ($("#txtTrigger").val() > 0)
+                           {
+                                setTimeout(function(){ seek_providers(); }, 5000);
+                                $("#txtTrigger").val('')
+                           }
+                         else{
+                                setTimeout(function(){ load(); }, 5000);
+                         }
+
+                    }
+                   else{
+                            msjError();
+                   }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+}
+
+function setIdForPayStatus(id,Factura,Importe,Iva,trigger)
+{
+    $("#txtIdBills").val('');
+    $("#txtIdBills").val(id);
+    $("#txtTrigger").val('');
+    $("#txtTrigger").val(trigger);
+
+    $("#txtFactura").val('');
+    $("#txtFactura").val(Factura);
+
+    $("#txtImporte").val('');
+    $("#txtImporte").val(Importe);
+
+    $("#txtIva").val('');
+    $("#txtIva").val(Iva);
+    load_bnk();
+}
+
+function load_bnk()
+{
+    $("#DivSelect").empty();
+    $.ajax({
+                type:'POST',
+                url: '/pagos/update/loadBnk/',
+                data:{
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                      },
+                success:function(data)
+                {
+                    $("#DivSelect").append(data);
+                    $("#DivSelect").addClass("selectpicker");
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+}
+
+function update_status_pay()
+{
+    $.ajax({
+                type:'POST',
+                url: '/pagos/update/status/',
+                data:{
+                        txtIdBills:$("input[name=txtIdBills]").val(),
+                        txtFactura:$("input[name=txtFactura]").val(),
+                        txtImporte:$("input[name=txtImporte]").val(),
+                        txtIva:$("input[name=txtIva]").val(),
+                        CboBnk:$("#CboBnk option:selected").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                  if (data >= 1)
+                     {
+                        msjSucces('El estado de la factura fue cambiado con exito !');
+                        if ($("#txtTrigger").val() > 0)
+                        {
+                                setTimeout(function(){ seek_providers(); }, 5000);
+                        }
+                        else{
+                                setTimeout(function(){ load(); }, 5000);
+                        }
+
+                    }
+                   else{
+                            msjError();
+                   }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+}
+/*here code for cancel bills */
+function setIdForCancel(id,trigger,amount,numProy)
+{
+    $("#txtIdCancel").val('');
+    $("#txtIdCancel").val(id);
+    $("#txtTrigger").val(trigger);
+
+    $("#txtMonto").val('');
+    $("#txtMonto").val(amount);
+
+    $("#txtNumProy").val('');
+    $("#txtNumProy").val(numProy);
+}
+function cancel_pay()
+{
+    $.ajax({
+                type:'POST',
+                url: '/pagos/cancel/bills/',
+                data:{
+                        txtIdCancel:$("input[name=txtIdCancel]").val(),
+                        txtMonto:$("input[name=txtMonto]").val(),
+                        txtNumProy:$("input[name=txtNumProy]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                  if (data >= 1)
+                     {
+                        msjSucces('Factura eliminada con exito !');
+                        if ($("#txtTrigger").val() > 0)
+                        {
+                              setTimeout(function(){ load(); }, 5000);
+                        }
+                        else{
+                              setTimeout(function(){ seek_providers(); }, 5000);
+                        }
+                    }
+                   else{
+                            msjError();
+                   }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+}
+/* here code to edit bil*/
+function link_go(url)
+{
+    window.location.href = url;
+}
+/* submenu to calendar or providers */
+function cal()
+{
+    $("#DivProveedores").hide();
+    $("#DivCalendario").show();
+
+}
+function providers()
+{
+    $("#DivCalendario").hide();
+    $("#DivProveedores").show();
+}
+/*load tree providers*/
+function load_tree_providers()
+{
+    $("#DivTbodyCon").empty();
+        $.ajax({
+                type:'POST',
+                url: '/pagos/dashboard/tree/load/',
+                data:{
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                      $("#DivTbodyCon").append(data);
+
+                        $('#demo-foo-accordion').footable().on('footable_row_expanded', function(e) {
+                            $('#demo-foo-accordion tbody tr.footable-detail-show').not(e.row).each(function() {
+                                $('#demo-foo-accordion').data('footable').toggleDetail(this);
+                            });
+                        });
+
+
+                        $('#demo-foo-pagination').footable();
+                        $('#demo-show-entries').change(function (e) {
+                            e.preventDefault();
+                            var pageSize = $(this).val();
+                            $('#demo-foo-pagination').data('page-size', pageSize);
+                            $('#demo-foo-pagination').trigger('footable_initialized');
+                        });
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+
+
+}
+/*here code to list providers */
+function seek_providers()
+{
+    trigger = 0;
+    if($('#txtProviders').val() == '')
+    {
+        if($('#txtFactura').val() == '')
+        {
+            if($('#txtProyecto').val() == '')
+            {
+                msjAlert(' todos los campos no pueden estar vacios');
+            }
+            else{
+                    trigger = 1;
+            }
+        }
+        else{
+            trigger = 1;
+        }
+    }
+    else{
+        trigger = 1;
+    }
+    if (trigger > 0)
+    {
+        $("#DivTbodyCon").empty();
+        $.ajax({
+                type:'POST',
+                url: '/pagos/dashboard/tree/',
+                data:{
+                        txtProviders:$("input[name=txtProviders]").val(),
+                        txtFactura:$("input[name=txtFactura]").val(),
+                        txtProyecto:$("input[name=txtProyecto]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                      $("#DivTbodyCon").append(data);
+
+                        $('#demo-foo-accordion').footable().on('footable_row_expanded', function(e) {
+                            $('#demo-foo-accordion tbody tr.footable-detail-show').not(e.row).each(function() {
+                                $('#demo-foo-accordion').data('footable').toggleDetail(this);
+                            });
+                        });
+
+
+                        $('#demo-foo-pagination').footable();
+                        $('#demo-show-entries').change(function (e) {
+                            e.preventDefault();
+                            var pageSize = $(this).val();
+                            $('#demo-foo-pagination').data('page-size', pageSize);
+                            $('#demo-foo-pagination').trigger('footable_initialized');
+                        });
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+
+    }
+}
+/*here update bnk for providers*/
+function set_idProviders_bnk(id,banco,cuenta,clabe)
+{
+  /*here set the value*/
+  $("#txtIdProviderBnk").val('');
+  $("#txtIdProviderBnk").val(id);
+
+  /*here get all data for the form*/
+   $("#txtBanco").val('');
+   $("#txtCuenta").val('');
+   $("#txtClabe").val('');
+
+   $("#txtBanco").val(banco);
+   $("#txtCuenta").val(cuenta);
+   $("#txtClabe").val(clabe);
+
+}
+
+function save_edit_banco()
+{
+    $.ajax({
+                type:'POST',
+                url: '/proveedor-projecto/save_edit_banco/',
+                data:{
+                        txtBanco:$("input[name=txtBanco]").val(),
+                        txtCuenta:$("input[name=txtCuenta]").val(),
+                        txtClabe:$("input[name=txtClabe]").val(),
+                        txtIdProvider:$("input[name=txtIdProviderBnk]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                    if(data == 1)
+                    {
+                        msjSucces('Datos actualizados con exito !');
+                        load();
+                    }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+                });
+
+}
+load();

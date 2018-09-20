@@ -1,0 +1,6 @@
+.idea
+*.pyc
+.DS_Store
+/Docs
+*settings.py
+/gitprovider/provider/settings.py
