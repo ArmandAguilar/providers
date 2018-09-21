@@ -5,7 +5,6 @@ urlpatterns = [
     url(r'^pagos/$', views.index, name='index'),
     url(r'^pagos/dashboard/$', views.load_dashboard, name='load_dashboard'),
     url(r'^pagos/dashboard/tree/$', views.load_dashboar_tree, name='load_dashboar_tree'),
-    url(r'^pagos/dashboard/tree/load/$', views.load_dashboard_tree_date, name='load_dashboard_tree_date'),
     url(r'^pagos/update/fechapago/$', views.update_date_pay, name='update_date_pay'),
     url(r'^pagos/update/loadBnk/$', views.load_OperBancks, name='load_OperBancks'),
     url(r'^pagos/update/status/$', views.update_status_pay, name='update_status_pay'),

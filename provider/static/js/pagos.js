@@ -9,6 +9,10 @@ $(document).ready(function() {
     autoclose:true,
     format: "yyyy-mm-dd"
     });
+    $('#txtFechaPagoCal').datepicker({
+    autoclose:true,
+    format: "yyyy-mm-dd"
+    });
 
 });
 function load()
@@ -280,7 +284,15 @@ function seek_providers()
         {
             if($('#txtProyecto').val() == '')
             {
-                msjAlert(' todos los campos no pueden estar vacios');
+                if($('#txtFechaPagoCal').val() == '')
+                {
+                     msjAlert(' todos los campos no pueden estar vacios');
+                }
+                else
+                {
+                    trigger = 1;
+                }
+
             }
             else{
                     trigger = 1;
@@ -293,6 +305,7 @@ function seek_providers()
     else{
         trigger = 1;
     }
+
     if (trigger > 0)
     {
         $("#DivTbodyCon").empty();
@@ -303,6 +316,7 @@ function seek_providers()
                         txtProviders:$("input[name=txtProviders]").val(),
                         txtFactura:$("input[name=txtFactura]").val(),
                         txtProyecto:$("input[name=txtProyecto]").val(),
+                        txtFechaPago:$("input[name=txtFechaPagoCal]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)

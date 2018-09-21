@@ -496,88 +496,14 @@ def load_dashboard(request):
         end_date = endDateStr[2] + '-' + endDateStr[1] + '-' + endDateStr[0]
         t = total_for_week(start_date,end_date)
 
-
-    ################
-    #for cal_value in cal:
-        #head_date += '<div class ="row text-center">'
-        #for dia in cal_value:
-        #    #Format here the date for dias empty
-        #    if dia == 0:
-        #        Fecha = '00/00/0000'
-        #    else:
-        #        Fecha = str(dia) + '/'  + str(mount)  + '/' +  str(year)
-            #here we see if is Sat or Sun
-         #   if dia > 0:
-                #
-        #        DayWeek = datetime.date(year, mount, dia).strftime("%A")
-        #        if DayWeek == 'Saturday':
-        #            vacio = 0
-        #        elif DayWeek == 'Sunday':
-        #            vacio = 0
-        #        else:
-        #            head_date += '  <div class ="col-sm-2">'
-        #            head_date += '      <div class ="panel media pad-all bg-primary">'
-        #            head_date += '          <div class ="media-body">'
-        #            head_date += '              <p class ="mar-no">' + str(Fecha)  + '</p>'
-        #            head_date += '          </div>'
-        #            head_date += '      </div>'
-        #            head_date += '  </div>'
-        #            FilaTotalExist = 1
-        #            contadorCols.insert(k,str(Fecha))
-        #            k += 1
-        #if FilaTotalExist > 0:
-        #    head_date += '  <div class ="col-sm-2">'
-        #    head_date += '      <div class ="panel media pad-all bg-primary">'
-        #    head_date += '          <div class ="media-body">'
-        #    head_date += '              <p class ="mar-no">Total Semanal</p>'
-        #    head_date += '          </div>'
-        #    head_date += '      </div>'
-        #    head_date += '  </div>'
-        #    FilaTotalExist = 0
-        #head_date += '</div>'
-        #here crate new cols with data
-        #if len(contadorCols) > 0:
-        #    head_date += '<div class="row">'
-        #    for cols in contadorCols:
-        #        gap = fill_row_with_data(dataJson,cols)
-        #        head_date += '  <div class ="col-sm-2">'
-        #        head_date += str(gap)
-        #        head_date += '  </div>'
-        #    startDateStr = str(contadorCols[0]).split("/")
-        #    endDateStr = str(contadorCols[-1]).split("/")
-        #    start_date = startDateStr[2] + '-' + startDateStr[1] + '-' + startDateStr[0]
-        #    end_date = endDateStr[2] + '-' + endDateStr[1] + '-' + endDateStr[0]
-        #    t = total_for_week(start_date,end_date)
-        #    if  t == 'None':
-        #        t = 0.0
-        #    total_week  = babel.numbers.format_currency(str(t), 'USD', locale='en_US')
-        #    head_date += '  <div class ="col-sm-2 text-center">'
-        #    head_date += '      <div class ="panel media pad-all bg-primary">'
-        #    head_date += '          <div class ="media-body">'
-        #    head_date += '              <p class ="mar-no">' + str(total_week) + '</p>'
-        #    head_date += '          </div>'
-        #    head_date += '      </div>'
-        #    head_date += '  </div>'
-        #    head_date += '</div>'
-        #    t = 0.0
-        #here clean contador de cols and rows
-        #contadorCols = []
-
     dashboard = HttpResponse()
     dashboard.write(head_date)
     return dashboard
 
-#Here draw dahsboar in form to list tree
-def load_dashboard_tree_date(request):
-    time_now = datetime.datetime.now()
-    year = time_now.year
-    month = int(time_now.month)
-    dateMonthStart = "%s-%s-01" % (year, month)
-    if month > 1:
-        dateMonthEnd = "%s-%s-%s" % (year, month, calendar.monthrange(year, month)[1])
-    else:
-        dateMonthEnd = str(year) + '-01-31'
-    Tbody = ''
+#Here's the fucntion that you need change###### <-------
+#Here draw the dashboard list this functio is for make seek
+def load_dashboar_tree(request):
+    Tbody =''
     Tbody += '<table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">'
     Tbody += '	<thead>'
     Tbody += '      <tr>'
@@ -585,10 +511,17 @@ def load_dashboard_tree_date(request):
     Tbody += '          <th>Factura</th>'
     Tbody += '          <th data-hide="all">Lider</th>'
     Tbody += '          <th data-hide="all">No. Proyecto</th>'
+    Tbody += '          <th data-hide="all">Proveedor</th>'
     Tbody += '          <th data-hide="all">Contrato</th>'
+    Tbody += '          <th data-hide="all">Factura</th>'
     Tbody += '          <th data-hide="all">Monto</th>'
-    Tbody += '          <th data-hide="all">Pagar</th>'
-    Tbody += '          <th data-hide="all">Pagada</th>'
+    Tbody += '          <th data-hide="all">IVA</th>'
+    Tbody += '          <th data-hide="all">Total</th>'
+    Tbody += '          <th data-hide="all">Pagado</th>'
+    Tbody += '          <th data-hide="all">Saldo</th>'
+    Tbody += '          <th data-hide="all">Banco</th>'
+    Tbody += '          <th data-hide="all">Cuenta</th>'
+    Tbody += '          <th data-hide="all">Clabe</th>'
     Tbody += '          <th data-hide="all">Accion</th>'
     Tbody += '      </tr>'
     Tbody += '      <tbody>'
@@ -608,87 +541,11 @@ def load_dashboard_tree_date(request):
     sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago]'  # 12
     sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Estado]'  # 13
     sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Iva]'  # 14
-    sql += 'FROM'
-    sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
-    sql += '[SAP].[dbo].[AAAProveedores],'
-    sql += '[SAP].[dbo].[AAAContrato],'
-    sql += '[Northwind].[dbo].[Usuarios]'
-    sql += 'Where  ([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdProveedor = [SAP].[dbo].[AAAProveedores].Id) and'
-    sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdContrato = [SAP].[dbo].[AAAContrato].Id) and'
-    sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdLider = [Northwind].[dbo].[Usuarios].Id) and'
-    sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago >= \'' + str(dateMonthStart) + '\' and [SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago <= \'' + str(dateMonthEnd) + '\')'
-
-    try:
-        conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,
-                               database=settings.DBMSSQL)
-        cur = conn.cursor()
-        cur.execute(sql)
-        for value in cur:
-            amount = babel.numbers.format_currency(str(value[10]), 'USD', locale='en_US')
-            Tbody += '<tr>'
-            Tbody += '	<td>' + str(value[4]) + '</td>'
-            Tbody += '	<td>' + str(value[9]) + '</td>'
-            Tbody += '	<td>' + str(value[6]) + '</td>'
-            Tbody += '	<td>' + str(value[8]) + '</td>'
-            Tbody += '	<td>' + str(value[2]) + '</td>'
-            Tbody += '	<td>' + str(amount) + '</td>'
-            Tbody += '	<td>' + str(value[12].strftime("%d-%m-%Y")) + '</td>'
-            Tbody += '	<td>' + str(value[13]) + '</td>'
-            if str(value[13]) == 'Si':
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
-            else:
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
-            Tbody += '</tr>'
-        conn.commit()
-        conn.close()
-    except pymssql.Error as e:
-        Tbody = ''
-    Tbody += '      </tbody>'
-    Tbody += '      <tfoot>'
-    Tbody += '          <tr>'
-    Tbody += '              <td colspan="5">'
-    Tbody += '                  <div class ="text-right"><ul class="pagination"> </ul></div>'
-    Tbody += '              </td>'
-    Tbody += '          </tr>'
-    Tbody += '      </tfoot>'
-    Tbody += '</table>'
-    dashboard = HttpResponse()
-    dashboard.write(Tbody)
-    return dashboard
-
-#Here draw the dashboard list this functio is for make seek
-def load_dashboar_tree(request):
-    Tbody =''
-    Tbody += '<table id="demo-foo-pagination" class="table toggle-arrow-tiny" data-page-size="5">'
-    Tbody += '	<thead>'
-    Tbody += '      <tr>'
-    Tbody += '          <th data-toggle="true">Proveedor</th>'
-    Tbody += '          <th>Factura</th>'
-    Tbody += '          <th data-hide="all">Lider</th>'
-    Tbody += '          <th data-hide="all">No. Proyecto</th>'
-    Tbody += '          <th data-hide="all">Contrato</th>'
-    Tbody += '          <th data-hide="all">Monto</th>'
-    Tbody += '          <th data-hide="all">Pagar</th>'
-    Tbody += '          <th data-hide="all">Pagada</th>'
-    Tbody += '          <th data-hide="all">Accion</th>'
-    Tbody += '      </tr>'
-    Tbody += '      <tbody>'
-    Tbody += '</thead>'
-    sql ='SELECT [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Id]' #0
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[IdContrato]' #1
-    sql += ',[SAP].[dbo].[AAAContrato].[Contrato]' #2
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[IdProveedor]'#3
-    sql += ',[SAP].[dbo].[AAAProveedores].[Proveedor]'#4
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[IdLider]'#5
-    sql += ',[Northwind].[dbo].[Usuarios].[Nombre]'#6
-    sql += ',[Northwind].[dbo].[Usuarios].[Apellidos]'#7
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[NumProyecto]'#8
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Factura]'#9
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Monto]'#10
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Concepto]'#11
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago]'#12
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Estado]'#13
-    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Iva]'  # 14
+    sql += ',[SAP].[dbo].[AAAContrato].[Monto]'  # 15
+    sql += ',[SAP].[dbo].[AAAContrato].[Iva]'  # 16
+    sql += ',[SAP].[dbo].[AAAProveedores].[Banco]'  # 17
+    sql += ',[SAP].[dbo].[AAAProveedores].[Cuenta]'  # 18
+    sql += ',[SAP].[dbo].[AAAProveedores].[Clabe]'  # 19
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -705,6 +562,8 @@ def load_dashboar_tree(request):
         sqlWhere += ' [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Factura] like \'%' + str(request.POST['txtFactura']) + '%\' or '
     if str(request.POST['txtProyecto']) != '':
         sqlWhere += ' [SAP].[dbo].[AAAProveedorFacturaPoyecto].[NumProyecto] like \'%' + str(request.POST['txtProyecto']) + '%\' or '
+    if str(request.POST['txtFechaPago']) != '':
+        sqlWhere += ' [SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago] = \'' + str(request.POST['txtFechaPago']) + '\' or '
     sqlWhere = sqlWhere[: -4]
     sql += sqlWhere
     sql += ')'
@@ -713,20 +572,48 @@ def load_dashboar_tree(request):
         cur = conn.cursor()
         cur.execute(sql)
         for value in cur:
+            payed = '$0.0'
+            #Bills
             amount = babel.numbers.format_currency(str(value[10]), 'USD', locale='en_US')
+            iva = babel.numbers.format_currency(str(float(value[14])), 'USD', locale='en_US')
+            total_bill = babel.numbers.format_currency(str(float(value[10]) + float(value[14])), 'USD', locale='en_US')
+            #Contract
+            contract = babel.numbers.format_currency(str(float(value[15]) + float(value[16])), 'USD', locale='en_US')
+            #balance
+            amountBills = get_balance(value[1])
+            amountBillsTotal = (float(value[15]) + float(value[16])) - float(amountBills)
+            balance = babel.numbers.format_currency(str(amountBillsTotal), 'USD', locale='en_US')
+
+            if str(value[13]) == 'Si' and float(value[14])  > 0:
+                payed = total_bill
+            if str(value[13]) == 'Si' and float(value[14]) == 0:
+                payed = total_bill
+
+
+
             Tbody += '<tr>'
             Tbody += '	<td>' + str(value[4]) + '</td>'
             Tbody += '	<td>' + str(value[9]) + '</td>'
             Tbody += '	<td>' + str(value[6]) + '</td>'
             Tbody += '	<td>' + str(value[8]) + '</td>'
-            Tbody += '	<td>' + str(value[2]) + '</td>'
+            Tbody += '	<td>' + str(value[4]) + '</td>'
+            Tbody += '	<td>' + str(contract) + '</td>'
+            Tbody += '	<td>' + str(value[9]) + '</td>'
             Tbody += '	<td>' + str(amount) + '</td>'
-            Tbody += '	<td>' + str(value[12].strftime("%d-%m-%Y")) +'</td>'
-            Tbody += '	<td>' + str(value[13]) + '</td>'
+            Tbody += '	<td>' + str(iva) + '</td>'
+            Tbody += '	<td>' + str(total_bill) + '</td>'
+            Tbody += '	<td>' + str(payed) + '</td>'
+            Tbody += '	<td>' + str(balance) + '</td>'
+            Tbody += '	<td>' + str(value[17]) + '</td>'
+            Tbody += '	<td>' + str(value[18]) + '</td>'
+            Tbody += '	<td>' + str(value[19]) + '</td>'
+
             if str(value[13]) == 'Si':
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class ="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\''  + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class ="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div></div>'
             else:
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+
+
             Tbody += '</tr>'
         conn.commit()
         conn.close()
