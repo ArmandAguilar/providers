@@ -18,7 +18,7 @@ def index(request):
     return HttpResponse(template.render(context,request))
 
 #here get all data's bill for mouth
-def bills_json(month,year):
+def bills_json(month,year,contable):
 
     BillsJson = ''
     Key = 0
@@ -50,6 +50,7 @@ def bills_json(month,year):
     sql += ',[SAP].[dbo].[AAAProveedores].[Banco]'  # 17
     sql += ',[SAP].[dbo].[AAAProveedores].[Cuenta]'  # 18
     sql += ',[SAP].[dbo].[AAAProveedores].[Clabe]'  # 19
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 20
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -58,7 +59,7 @@ def bills_json(month,year):
     sql += 'Where  ([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdProveedor = [SAP].[dbo].[AAAProveedores].Id) and'
     sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdContrato = [SAP].[dbo].[AAAContrato].Id) and'
     sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdLider = [Northwind].[dbo].[Usuarios].Id) and'
-    sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago >= \'' + str(dateMonthStart) + '\' and [SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago <= \'' + str(dateMonthEnd) + '\')'
+    sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago >= \'' + str(dateMonthStart) + '\' and [SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago <= \'' + str(dateMonthEnd) + '\') and [SAP].[dbo].[AAAProveedorFacturaPoyecto].Contable=\'' + str(contable) + '\''
 
     try:
         conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
@@ -70,7 +71,7 @@ def bills_json(month,year):
             date_format = str(int(ds[2])) + '/' + str(int(ds[1])) + '/' +  str(ds[0])
             amountBills = get_balance(value[1])
             amountBillsTotal = (float(value[15]) + float(value[16])) - float(amountBills)
-            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2]) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4]) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11]) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17]) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + '},' + '\n'
+            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2]) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4]) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11]) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17]) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + ',"Contable":"' + str(value[20]) + '"},' + '\n'
             Key = 1
         conn.commit()
         conn.close()
@@ -138,10 +139,16 @@ def fill_row_with_data(dJson,seekValue):
             data += '              <p class ="mar-no">Pagado:' + str(payed) + '</p>'
             data += '              <p class ="mar-no">Saldo:' + str(balance) + '</p>'
             data += '              <p class ="mar-no">&nbsp;</p>'
-            if str(vals['Estado']) == 'Si':
-                data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
+            if str(vals['Contable']) == 'Si':
+                if str(vals['Estado']) == 'Si':
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
+                else:
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
             else:
-                data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                if str(vals['Estado']) == 'Si':
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
+                else:
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
             data += '          </div>'
             data += '      </div>'
             data += '  </div></div>'
@@ -206,13 +213,14 @@ def update_status_pay(request):
     status = 0
     if request.method == 'POST':
         try:
-            #Insert in [AAAPasivoConsulting]
-            SqlInsert = 'INSERT INTO [SAP].[dbo].[AAAPasivoConsulting] VALUES (\'' + request.POST['CboBnk'] + '\',\'' + request.POST['txtFactura'] + '\',\'' + request.POST['txtImporte'] + '\',\'' + request.POST['txtIva'] + '\',\'' + str(request.POST['txtIdBills']) + '\')'
-            conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
-            cur = conn.cursor()
-            cur.execute(SqlInsert)
-            conn.commit()
-            conn.close()
+            if str(request.POST['txtuncontable']) == 'Si':
+                #Insert in [AAAPasivoConsulting]
+                SqlInsert = 'INSERT INTO [SAP].[dbo].[AAAPasivoConsulting] VALUES (\'' + request.POST['CboBnk'] + '\',\'' + request.POST['txtFactura'] + '\',\'' + request.POST['txtImporte'] + '\',\'' + request.POST['txtIva'] + '\',\'' + str(request.POST['txtIdBills']) + '\')'
+                conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
+                cur = conn.cursor()
+                cur.execute(SqlInsert)
+                conn.commit()
+                conn.close()
             #Update in [AAAProveedorFacturaPoyecto]
             sql = 'UPDATE [SAP].[dbo].[AAAProveedorFacturaPoyecto] SET [Estado] = \'Si\' WHERE Id=\'' + str(request.POST['txtIdBills']) + '\''
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
@@ -228,14 +236,20 @@ def update_status_pay(request):
 def cancel_pay(request):
     status = 0
     if request.method == 'POST':
-        decrees_charge(request.POST['txtNumProy'],request.POST['txtMonto'])
+
         try:
+
+            if str(request.POST['txtuncontable']) == 'Si':
+                decrees_charge(request.POST['txtNumProy'], request.POST['txtMonto'])
+            else:
+                val = 0
             sql = 'DELETE FROM [SAP].[dbo].[AAAProveedorFacturaPoyecto] WHERE Id = \'' + str(request.POST['txtIdCancel']) + '\''
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
             cur = conn.cursor()
             cur.execute(sql)
             conn.commit()
             conn.close()
+
             status = 1
         except pymssql.Error as e:
             status = 'SQL Error: ' + str(e)
@@ -432,20 +446,24 @@ def save_edit(request):
 #Here draw the dashboard calendar
 def load_dashboard(request):
     head_date = ''
+    contable = ''
     if request.method == 'POST':
         mount = int(request.POST['CboMes'])
         year = int(request.POST['txtYear'])
+        contable = str(request.POST['txtContable'])
     else:
         #mount = 7
         #year = 2018
         time_now = datetime.datetime.now()
         year = time_now.year
         mount = int(time_now.month)
+        contable = 'Si'
     Fecha = '00/00/0000'
+
     contadorCols = []
     k = 0
     cal = calendar.monthcalendar(year, mount)
-    dataJson = bills_json(mount,year)
+    dataJson = bills_json(mount, year, contable)
     head_date += '<div class ="row text-center">'
     cols_x = 0
     cols_xx = 3
@@ -546,6 +564,7 @@ def load_dashboar_tree(request):
     sql += ',[SAP].[dbo].[AAAProveedores].[Banco]'  # 17
     sql += ',[SAP].[dbo].[AAAProveedores].[Cuenta]'  # 18
     sql += ',[SAP].[dbo].[AAAProveedores].[Clabe]'  # 19
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 20
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -566,7 +585,9 @@ def load_dashboar_tree(request):
         sqlWhere += ' [SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago] = \'' + str(request.POST['txtFechaPago']) + '\' or '
     sqlWhere = sqlWhere[: -4]
     sql += sqlWhere
-    sql += ')'
+    sql += ') and [SAP].[dbo].[AAAProveedorFacturaPoyecto].Contable = \'' + str(request.POST['txtContableNodo']) + '\''
+
+
     try:
         conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
         cur = conn.cursor()
@@ -611,8 +632,10 @@ def load_dashboar_tree(request):
             if str(value[13]) == 'Si':
                 Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class ="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\''  + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class ="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div></div>'
             else:
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
-
+                if str(value[20] == 'Si'):
+                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+                else:
+                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
 
             Tbody += '</tr>'
         conn.commit()

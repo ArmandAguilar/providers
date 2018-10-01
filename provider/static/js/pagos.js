@@ -13,6 +13,15 @@ $(document).ready(function() {
     autoclose:true,
     format: "yyyy-mm-dd"
     });
+    // SWITCHERY - SIZES
+    // =================================================================
+    // Require Switchery
+    // http://abpetkov.github.io/switchery/
+    // =================================================================
+    //new Switchery(document.getElementById('demo-sw-sz-lg'), { size: 'large' });
+    new Switchery(document.getElementById('demo-sw-unchecked'));
+    new Switchery(document.getElementById('demo-sw-unchecked-nodo'));
+
 
 });
 function load()
@@ -42,6 +51,7 @@ function load()
                 data:{
                         CboMes:month,
                         txtYear:year,
+                        txtContable:$("#txtContable").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -150,6 +160,7 @@ function update_status_pay()
                         txtImporte:$("input[name=txtImporte]").val(),
                         txtIva:$("input[name=txtIva]").val(),
                         CboBnk:$("#CboBnk option:selected").val(),
+                        txtuncontable:'Si',
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -198,6 +209,7 @@ function cancel_pay()
                         txtMonto:$("input[name=txtMonto]").val(),
                         txtNumProy:$("input[name=txtNumProy]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        txtuncontable:'Si',
                         },
                 success:function(data)
                 {
@@ -317,6 +329,7 @@ function seek_providers()
                         txtFactura:$("input[name=txtFactura]").val(),
                         txtProyecto:$("input[name=txtProyecto]").val(),
                         txtFechaPago:$("input[name=txtFechaPagoCal]").val(),
+                        txtContableNodo:$("input[name=txtContableNodo]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -388,5 +401,131 @@ function save_edit_banco()
                 }
                 });
 
+}
+/*here set the value for contable or uncontable*/
+function set_uncontable()
+{
+    $("#txtContable").val('Si');
+    if($("#demo-sw-unchecked").is(':checked')) {
+            $("#txtContable").val('Si');
+    }
+    else{
+          $("#txtContable").val('No');
+    }
+}
+
+function set_uncontable_node()
+{
+    $("#txtContableNodo").val('Si');
+    if($("#demo-sw-unchecked-nodo").is(':checked')) {
+            $("#txtContableNodo").val('Si');
+    }
+    else{
+          $("#txtContableNodo").val('No');
+    }
+}
+
+
+function update_status_pay_uncontable()
+{
+
+    $.ajax({
+                type:'POST',
+                url: '/pagos/update/status/',
+                data:{
+                        txtIdBills:$("input[name=txtIdBillsUnContable]").val(),
+                        txtFactura:$("input[name=txtFacturaUnContable]").val(),
+                        txtImporte:$("input[name=txtImporteUnContable]").val(),
+                        txtIva:$("input[name=txtIvaUnContable]").val(),
+                        txtuncontable:'No',
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                  if (data >= 1)
+                     {
+                        msjSucces('El estado de la factura fue cambiado con exito !');
+                        if ($("#txtTrigger").val() > 0)
+                        {
+                                setTimeout(function(){ seek_providers(); }, 5000);
+                        }
+                        else{
+                                setTimeout(function(){ load(); }, 5000);
+                        }
+
+                    }
+                   else{
+                            msjError();
+                   }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
+
+}
+function setIdForPayStatus_uncontable(id,Factura,Importe,Iva,trigger)
+{
+    $("#txtIdBillsUnContable").val('');
+    $("#txtIdBillsUnContable").val(id);
+    $("#txtTrigger").val('');
+    $("#txtTrigger").val(trigger);
+
+    $("#txtFacturaUnContable").val('');
+    $("#txtFacturaUnContable").val(Factura);
+
+    $("#txtImporteUnContable").val('');
+    $("#txtImporteUnContable").val(Importe);
+
+    $("#txtIvaUnContable").val('');
+    $("#txtIvaUnContable").val(Iva);
+
+}
+
+function setIdForCancel_uncontable(id,trigger,amount,numProy)
+{
+    $("#txtIdCancelUnContable").val('');
+    $("#txtIdCancelUnContable").val(id);
+    $("#txtTrigger").val(trigger);
+
+    $("#txtMontoUnContable").val('');
+    $("#txtMontoUnContable").val(amount);
+
+    $("#txtNumProyUnContable").val('');
+    $("#txtNumProyUnContable").val(numProy);
+}
+function cancel_pay_uncontable()
+{
+    $.ajax({
+                type:'POST',
+                url: '/pagos/cancel/bills/',
+                data:{
+                        txtIdCancel:$("input[name=txtIdCancelUnContable]").val(),
+                        txtMonto:$("input[name=txtMontoUnContable]").val(),
+                        txtNumProy:$("input[name=txtNumProyUnContable]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        txtuncontable:'No',
+                        },
+                success:function(data)
+                {
+                  if (data >= 1)
+                     {
+                        msjSucces('Factura eliminada con exito !');
+                        if ($("#txtTrigger").val() > 0)
+                        {
+                              setTimeout(function(){ load(); }, 5000);
+                        }
+                        else{
+                              setTimeout(function(){ seek_providers(); }, 5000);
+                        }
+                    }
+                   else{
+                            msjError();
+                   }
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+           });
 }
 load();

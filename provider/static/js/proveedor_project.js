@@ -46,6 +46,13 @@ $(document).ready(function() {
     autoclose:true,
     format: "yyyy-mm-dd"
     });
+    // SWITCHERY - SIZES
+    // =================================================================
+    // Require Switchery
+    // http://abpetkov.github.io/switchery/
+    // =================================================================
+    //new Switchery(document.getElementById('demo-sw-sz-lg'), { size: 'large' });
+    new Switchery(document.getElementById('demo-sw-sz'));
 
 });
 
@@ -308,6 +315,7 @@ function save_data()
                         txtFechaPago:$("input[name=txtFechaPago]").val(),
                         txtConcepto:$("#txtConcepto").val(),
                         txtIva:$("input[name=txtIva]").val(),
+                        txtContable:$("input[name=txtContable]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -364,6 +372,18 @@ function set_bills()
     $("#txtFactura").val('');
     $("#txtFactura").val('Provisionar');
 }
+/*here set the value for contable or uncontable*/
+function set_uncontable()
+{
+    $("#txtContable").val('Si');
+    if($("#demo-sw-sz").is(':checked')) {
+            $("#txtContable").val('Si');
+    }
+    else{
+          $("#txtContable").val('No');
+    }
+}
+
 
 
 

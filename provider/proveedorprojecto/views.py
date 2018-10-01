@@ -106,7 +106,7 @@ def save_data(request):
             t_amount = float(request.POST['txtMonto'])
             verify_status = verify_amount_contract(request.POST['CboContrato'], t_amount)
             if verify_status == 1:
-                Sql = 'INSERT INTO [SAP].[dbo].[AAAProveedorFacturaPoyecto] VALUES (\'' + str(request.POST['CboContrato']) + '\',\'' + str(request.POST['txtIdProvider']) +'\',\'' + str(request.POST['CboLider']) + '\',\'' + str(request.POST['txtIdProject']) + '\',\'' + str(request.POST['txtFactura']) + '\',\'' + str(request.POST['txtMonto']) + '\',\'' + str(request.POST['txtConcepto']) + '\',\'No\',\'' + str(request.POST['txtFechaPago']) + '\',\'' + str(request.POST['txtIva'])+ '\')'
+                Sql = 'INSERT INTO [SAP].[dbo].[AAAProveedorFacturaPoyecto] VALUES (\'' + str(request.POST['CboContrato']) + '\',\'' + str(request.POST['txtIdProvider']) +'\',\'' + str(request.POST['CboLider']) + '\',\'' + str(request.POST['txtIdProject']) + '\',\'' + str(request.POST['txtFactura']) + '\',\'' + str(request.POST['txtMonto']) + '\',\'' + str(request.POST['txtConcepto']) + '\',\'No\',\'' + str(request.POST['txtFechaPago']) + '\',\'' + str(request.POST['txtIva']) + '\',\'' + str(request.POST['txtContable']) + '\')'
                 conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
                 cur = conn.cursor()
                 cur.execute(Sql)

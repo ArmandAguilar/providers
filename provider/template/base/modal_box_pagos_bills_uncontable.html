@@ -1,0 +1,35 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-bills-uncontable" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Cambiar estado de factura</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height: 140px">
+                    <center>
+                        <h4>¿Esta Factura fue pagada?</h4>
+                        <input type="hidden" id="txtIdBillsUnContable" name="txtIdBillsUnContable" />
+						<input type="hidden" id="txtFacturaUnContable" name="txtFacturaUnContable" />
+						<input type="hidden" id="txtImporteUnContable" name="txtImporteUnContable" />
+						<input type="hidden" id="txtIvaUnContable" name="txtIvaUnContable" />
+						<input type="hidden" id="txtTrigger" name="txtTrigger" />
+                    </center>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="update_status_pay_uncontable();">Pagada</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

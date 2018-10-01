@@ -1,0 +1,34 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-cancel-uncontable" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Borrar Factura</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height: 140px">
+                    <center>
+                        <h4>¿En realidad deseas borrar esta factura?_</h4>
+                        <input type="hidden" id="txtIdCancelUnContable" name="txtIdCancelUnContable" />
+						<input type="hidden" id="txtMontoUnContable" name="txtMontoUnContable" />
+						<input type="hidden" id="txtNumProyUnContable" name="txtNumProyUnContable" />
+						<input type="hidden" id="txtTrigger" name="txtTrigger" />
+                    </center>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="cancel_pay_uncontable();">Si</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">No</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->
