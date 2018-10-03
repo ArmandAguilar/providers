@@ -121,6 +121,7 @@
 									<!--Form-->
 									<form id="frmProveedersToProyect" name="frmProveedersToProyect" action="" method="post" class="form-horizontal">
 										<input type="hidden" id="txtId" name="txtId"  value="{{id}}"/>
+										<input type="hidden" id="txtIdContrato" name="txtIdContrato" value="{{idcontrato}}">
 										{% csrf_token %}
 										{{ form.errors }}
 										{{ form.non_field_errors }}
@@ -191,18 +192,21 @@
 														<div class="col-lg-7">
 															<div class="input-group mar-btm">
 																	<select id="CboContrato" name="CboContrato" >
-                                  											<option value="{{idcontrato}}" selected>{{contrato}}</option>
-
                                 									</select>
+																<span data-target="#modal-contract" data-toggle="modal" class="fa fa-file-text fa-lg" style="cursor:pointer; margin-left: 1rem;"></span>
 															</div>
+
 														</div>
 													</div>
 													<div class="form-group">
-														<label class="col-lg-3 control-label">Factura: </label>
-														<div class="col-lg-7">
+														<label class="col-lg-3 control-label">Factura:</label>
+														<div class="col-sm-3">
 															<div class="input-group mar-btm">
 																	<input type="text" name = 'txtFactura' id = 'txtFactura' placeholder="F-001" class="form-control" value="{{factura}}">
 															</div>
+														</div>
+														<div class="col-sm-1">
+															<span  class="fa fa-close fa-lg" style="cursor:pointer; margin-left: 1rem;" onclick="set_bills();"></span>
 														</div>
 													</div>
 													<div class="form-group">
@@ -229,6 +233,7 @@
 															</div>
 														</div>
 													</div>
+
 													<div class="form-group">
 														<div class="col-lg-12">
 															<div class="input-group mar-btm">
@@ -323,7 +328,7 @@
 			</div>
 			<!--===================================================-->
 			<!--END CONTENT CONTAINER-->
-
+			{% include 'base/modal_box_proveedorproyecto_contrato.html' %}
 
 
 			<!--MAIN NAVIGATION-->

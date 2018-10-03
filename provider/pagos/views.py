@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
@@ -143,7 +142,7 @@ def fill_row_with_data(dJson,seekValue):
                 if str(vals['Estado']) == 'Si':
                     data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
                 else:
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
             else:
                 if str(vals['Estado']) == 'Si':
                     data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
@@ -274,6 +273,7 @@ def form_edit_bills(request,id):
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Concepto]'#11
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago]'#12
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Iva]'  # 13
+    sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 14
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -303,6 +303,7 @@ def form_edit_bills(request,id):
                 'iva': value[13],
                 'concepto':value[11],
                 'fechapago':value[12].strftime("%Y-%m-%d"),
+                'contable':value[14]
             }
         conn.commit()
         conn.close()
@@ -332,38 +333,45 @@ def seek_name_proy(request):
 #Here seek Lider
 def seek_leader(request):
     data_text = ''
+    apellidos = ''
     if request.method == 'POST':
         try:
-            Sql = 'Select Id,Nombre From [Northwind].[dbo].[Usuarios] Where (CobranzaPerfil =\'Admin\' or CobranzaPerfil=\'User\') and (Departamento <> \'Baja\') order by Nombre'
+            Sql = 'Select Id,Nombre,Apellidos From [Northwind].[dbo].[Usuarios] Where (CobranzaPerfil =\'Admin\' or CobranzaPerfil=\'User\') and (Departamento <> \'Baja\') order by Nombre'
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL, database=settings.DBMSSQLNORTHWIND)
             cur = conn.cursor()
             cur.execute(Sql)
             for value in cur:
+                apellidos = value[2].decode("iso-8859-1")
                 if value[0] == str(request.POST['txtidLeader']):
-                    data_text += '<option value="' + str(value[0]) + '" selected>' + str(value[1])  + '</option>'
+                    data_text += '<option value="' + str(value[0]) + '" selected>' + str(value[1]) + ' ' + str(apellidos.encode("iso-8859-1")) + '</option>'
                 else:
-                    data_text += '<option value="' + str(value[0]) + '">' + str(value[1]) + '</option>'
+                    data_text += '<option value="' + str(value[0]) + '">' + str(value[1]) + ' ' + str(apellidos.encode("iso-8859-1")) + '</option>'
             conn.commit()
             conn.close()
         except ValueError:
-            data_text = 'i'
+            data_text = ValueError
         cbo_data = HttpResponse()
         cbo_data.write(data_text)
     return cbo_data
 #Here seek contrato
 def seek_contract(request):
     data_text = ''
+    amount = 0
+    total = 0
     if request.method == 'POST':
         try:
-            Sql = 'SELECT [Id],[Contrato] FROM [SAP].[dbo].[AAAContrato] Where [IdProveedor]=\'' + str(request.POST['txtIdProvider']) + '\''
+            Sql = 'SELECT [Id],[Contrato],[Monto],[Iva] FROM [SAP].[dbo].[AAAContrato] Where [IdProveedor]=\'' + str(request.POST['txtIdProvider']) + '\''
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL, database=settings.DBMSSQL)
             cur = conn.cursor()
             cur.execute(Sql)
             for value in cur:
-                if value[0] == str(request.POST['txtIdContract']):
-                    data_text += '<option value="' + str(value[0]) + '" selected>' + str(value[1]) + '</option>'
+                total = float(value[2]) + float(value[3])
+                amount = babel.numbers.format_currency(str(total), 'USD', locale='en_US')
+                if str(value[0]) == str(request.POST['txtIdContract']):
+                    data_text += '<option value="' + str(value[0]) + '" selected>' + str(value[1]) + ' x ' + str(amount) + '</option>'
                 else:
-                    data_text += '<option value="' + str(value[0]) + '">' + str(value[1]) + '</option>'
+                    data_text += '<option value="' + str(value[0]) + '">' + str(value[1]) + ' x ' + str(amount) + '</option>'
+
             conn.commit()
             conn.close()
         except ValueError:
@@ -609,8 +617,6 @@ def load_dashboar_tree(request):
                 payed = total_bill
             if str(value[13]) == 'Si' and float(value[14]) == 0:
                 payed = total_bill
-
-
 
             Tbody += '<tr>'
             Tbody += '	<td>' + str(value[4]) + '</td>'

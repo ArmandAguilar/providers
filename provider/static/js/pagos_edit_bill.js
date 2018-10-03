@@ -47,6 +47,7 @@ $(document).ready(function() {
     format: "yyyy-mm-dd"
     });
 
+
 });
 function search_provider()
 {
@@ -82,6 +83,24 @@ function set_Provider(id,name)
     /*here set in screen name provider step 3 */
     $("#lblProviderSel").empty();
     $("#lblProviderSel").append(name);
+    /*Update contrato cbo*/
+    $("#CboContrato").empty();
+        $.ajax({
+                type:'POST',
+                url: '/proveedor-projecto/cbo_contract/',
+                data:{
+                        txtIdProvider:$("input[name=txtIdProvider]").val(),
+                        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                        },
+                success:function(data)
+                {
+                       $("#CboContrato").append(data);
+                },
+                error:function(req,e,er) {
+                        msjError();
+                }
+                });
+
 
 }
 /*here make seek of proyescts */
@@ -124,6 +143,7 @@ function set_Proyect(id,name)
 /*here load contract of the providers */
 function load_contract(idProvider,IdContract)
 {
+        $("#CboContrato").empty();
         $.ajax({
                 type:'POST',
                 url: '/pagos/contract/',
@@ -270,4 +290,69 @@ function save_data()
                     msjError();
             }
             });
+}
+
+/*here set the value for contable or uncontable*/
+function set_uncontable()
+{
+    $("#txtContable").val('Si');
+    if($("#demo-sw-sz").is(':checked')) {
+            $("#txtContable").val('Si');
+    }
+    else{
+          $("#txtContable").val('No');
+    }
+}
+
+/*here fucnton to make a new contract*/
+function new_contract()
+{
+    if($("#txtContrato").val() == '')
+        {
+            msjAlert(' El campor contrato no pued estar vacio.');
+        }
+      else{
+             if($("#txtIdProvider").val() == '')
+             {
+                msjAlert(' Debes de tener un proveedor selecionado.');
+             }
+             else{
+                    $.ajax({
+                            type:'POST',
+                            url: '/contrato/save/',
+                            data:{
+                                    txtContrato:$("input[name=txtContrato]").val(),
+                                    txtIdProveedor:$("input[name=txtIdProvider]").val(),
+                                    txtMonto:$("input[name=txtMontoContrato]").val(),
+                                    txtIVA:$("input[name=txtIVA]").val(),
+                                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                                    },
+                            success:function(data)
+                            {
+                                   if (data >= 1)
+                                   {
+                                       msjSucces('Contrato asigando con exito !');
+                                       load_contract($("#txtIdProvider").val(),$("#txtIdContrato").val());
+                                       $("#txtContrato").val('');
+                                       $("#txtMonto").val('');
+                                       $("#txtIVA").val('');
+                                   }
+                                   else{
+                                          msjError();
+                                   }
+                            },
+                            error:function(req,e,er) {
+                                    msjError();
+                            }
+                            });
+
+             }
+      }
+}
+
+/*here set the value when the user haven't bills*/
+function set_bills()
+{
+    $("#txtFactura").val('');
+    $("#txtFactura").val('Provisionar');
 }
