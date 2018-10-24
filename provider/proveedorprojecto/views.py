@@ -41,7 +41,10 @@ def search_projects(request):
     tb = ''
     Sql = ''
     if request.method == 'POST':
-        Sql = 'SELECT [NumProyecto],[NomProyecto],[Estado] FROM [SAP].[dbo].[CatalogoDeProyectos] Where ([NumProyecto] like \'%' + str(request.POST['txtSearchProject']) + '%\' or [NomProyecto] like \'%' + str(request.POST['txtSearchProject'])  + '%\') and  (EstadoCompra = \'Activo\')'
+        if request.POST['txtAdmin'] == 'No':
+            Sql = 'SELECT [NumProyecto],[NomProyecto],[Estado] FROM [SAP].[dbo].[CatalogoDeProyectos] Where ([NumProyecto] like \'%' + str(request.POST['txtSearchProject']) + '%\' or [NomProyecto] like \'%' + str(request.POST['txtSearchProject']) + '%\') and  (EstadoCompra = \'Activo\')'
+        else:
+            Sql = 'SELECT [Proyecto],[Concepto] FROM [SAP].[dbo].[ProyectosAdministrativos] Where (Negocio <> \'SHY\') And ([Proyecto] like \'%' + str(request.POST['txtSearchProject']) + '%\' or [Concepto] like  \'%' + str(request.POST['txtSearchProject']) + '%\') '
         try:
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
             cur = conn.cursor()
@@ -49,7 +52,7 @@ def search_projects(request):
             for value in cur:
                 #here html<button >Launch demo modal</button>
                 tb += '<tr>'
-                tb += '<td>' + str(value[0]) + '.-' + str(value[1]) + '</td>'
+                tb += '<td>' + str(int(value[0])) + '.-' + str(value[1]) + '</td>'
                 tb += '<td><i class="fa fa-check fa-2x" data-target="#modal-edit" data-toggle="modal" style="cursor:pointer" onclick="set_Proyect(' + str(value[0]) + ',\'' + str(value[1]) + '\')"></i></td>'
                 tb += '</tr>'
 
@@ -113,8 +116,12 @@ def save_data(request):
                 conn.commit()
                 conn.close()
                 #Here send data for incress pasivo with iva
-                Total = float(request.POST['txtMonto']) + float(request.POST['txtIva'])
-                nsql = increse_charge(request.POST['txtIdProject'], Total)
+                if  int(request.POST['txtIdProject']) > 100:
+                    if str(request.POST['txtContable']) == 'Si':
+                        Total = float(request.POST['txtMonto']) + float(request.POST['txtIva'])
+                        nsql = increse_charge(request.POST['txtIdProject'], Total)
+                    else:
+                        val = 0
                 status = 1
             elif verify_status == 0:
                 status = 2

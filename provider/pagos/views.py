@@ -70,21 +70,22 @@ def bills_json(month,year,contable):
             date_format = str(int(ds[2])) + '/' + str(int(ds[1])) + '/' +  str(ds[0])
             amountBills = get_balance(value[1])
             amountBillsTotal = (float(value[15]) + float(value[16])) - float(amountBills)
-            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2]) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4]) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11]) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17]) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + ',"Contable":"' + str(value[20]) + '"},' + '\n'
+            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2].strip()) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4].strip()) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11].strip()) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17].strip()) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + ',"Contable":"' + str(value[20]) + '"},'
             Key = 1
         conn.commit()
         conn.close()
     except pymssql.Error as e:
         vars = 'SQL Error: ' + str(e)
     temp = len(BillsJson)
-    BillsJson = BillsJson[:temp - 2]
+    BillsJson = BillsJson[:temp - 1]
     BillsJson += ']}'
     if Key > 0:
         data = json.loads(BillsJson)
+        #data = BillsJson
     else:
         BillsJsonVacio = ''
         BillsJsonVacio = '{"Bills":['
-        BillsJsonVacio += '{"Id":0,"IdContrato":0,"Contrato":"000","IdProveedor":0,"Proveedor":"AAA","IdLider":0,"Nombre":"AAA","NumProyecto":0,"Factura":"000","Monto":0,"Concepto":"AA","FechaPago" : "0000-00-00","Iva":0}' + '\n'
+        BillsJsonVacio += '{"Id":0,"IdContrato":0,"Contrato":"000","IdProveedor":0,"Proveedor":"AAA","IdLider":0,"Nombre":"AAA","NumProyecto":0,"Factura":"000","Monto":0,"Concepto":"AA","FechaPago" : "0000-00-00","Iva":0}'
         BillsJsonVacio += ']}'
         data = json.loads(BillsJsonVacio)
     return data
@@ -96,11 +97,11 @@ def form_edit_pay(request):
     return HttpResponse(template.render(context, request))
 
 #Here fill al gaps bettwen dates
-def fill_row_with_data(dJson,seekValue):
+def fill_row_with_data2(dJson,seekValue):
     colorbox = 'bg-gray'
     payed = 0.0
     data = ''
-    data += '<div class ="row text-center">'
+    #data += '<div class ="row text-center">'
     for vals in dJson['Bills']:
 
         if vals['FechaPago'] == seekValue:
@@ -142,16 +143,16 @@ def fill_row_with_data(dJson,seekValue):
                 if str(vals['Estado']) == 'Si':
                     data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
                 else:
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(float(vals['Monto'])  + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
             else:
                 if str(vals['Estado']) == 'Si':
                     data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
                 else:
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(vals['Monto']) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(float(vals['Monto']) + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
             data += '          </div>'
             data += '      </div>'
             data += '  </div></div>'
-    data += '</div>'
+    #data += '</div>'
     return data
 #here we calculate Total of each week
 def total_for_week(startDate,endDate):
@@ -239,7 +240,8 @@ def cancel_pay(request):
         try:
 
             if str(request.POST['txtuncontable']) == 'Si':
-                decrees_charge(request.POST['txtNumProy'], request.POST['txtMonto'])
+                if int(request.POST['txtNumProy'])  > 100:
+                    decrees_charge(request.POST['txtNumProy'], request.POST['txtMonto'])
             else:
                 val = 0
             sql = 'DELETE FROM [SAP].[dbo].[AAAProveedorFacturaPoyecto] WHERE Id = \'' + str(request.POST['txtIdCancel']) + '\''
@@ -494,33 +496,25 @@ def load_dashboard(request):
             if dia > 0:
                 DayWeek = datetime.date(year, mount, dia).strftime("%A")
                 sum_total = sum_bills_to_pay(Fecha, dataJson)
+                #sum_total = 0
                 if DayWeek == 'Friday':
                     head_date += '  <div class ="col-sm-' + str(cols_xx) + '">'
-                    head_date += '      <div class ="panel media pad-all bg-primary">'
-                    head_date += '          <div class ="media-body">'
-                    head_date += '              <p class ="mar-no" style="font-weight:bold; font-size:16pt">' + str(Fecha)  + '</p>'
-                    head_date += '              <p class ="mar-no" style="font-weight:bold; font-size:12pt">' + str(sum_total) + '</p>'
+                    head_date += '      <div class="row">'
+                    head_date += '          <div class ="panel media pad-all bg-primary">'
+                    head_date += '              <div class ="media-body">'
+                    head_date += '                  <p class ="mar-no" style="font-weight:bold; font-size:16pt">' + str(Fecha)  + '</p>'
+                    head_date += '                  <p class ="mar-no" style="font-weight:bold; font-size:12pt">' + str(sum_total) + '</p>'
+                    head_date += '              </div>'
                     head_date += '          </div>'
                     head_date += '      </div>'
+
+                    gap = fill_row_with_data2(dataJson,Fecha)
+                    #gap = ''
+                    head_date += str(gap)
                     head_date += '  </div>'
                     contadorCols.insert(k,str(Fecha))
                     k += 1
     head_date += '</div>'
-    #here crate new cols with data
-
-    if len(contadorCols) > 0:
-        for cols in contadorCols:
-            head_date += '<div class="row">'
-            gap = fill_row_with_data(dataJson,cols)
-            head_date += '  <div class ="col-sm-' + str(cols_xx) + '">'
-            head_date += str(gap)
-            head_date += '  </div>'
-            head_date += '</div">'
-        startDateStr = str(contadorCols[0]).split("/")
-        endDateStr = str(contadorCols[-1]).split("/")
-        start_date = startDateStr[2] + '-' + startDateStr[1] + '-' + startDateStr[0]
-        end_date = endDateStr[2] + '-' + endDateStr[1] + '-' + endDateStr[0]
-        t = total_for_week(start_date,end_date)
 
     dashboard = HttpResponse()
     dashboard.write(head_date)
@@ -548,6 +542,7 @@ def load_dashboar_tree(request):
     Tbody += '          <th data-hide="all">Banco</th>'
     Tbody += '          <th data-hide="all">Cuenta</th>'
     Tbody += '          <th data-hide="all">Clabe</th>'
+    Tbody += '          <th data-hide="all">Referencia</th>'
     Tbody += '          <th data-hide="all">Accion</th>'
     Tbody += '      </tr>'
     Tbody += '      <tbody>'
@@ -573,6 +568,7 @@ def load_dashboar_tree(request):
     sql += ',[SAP].[dbo].[AAAProveedores].[Cuenta]'  # 18
     sql += ',[SAP].[dbo].[AAAProveedores].[Clabe]'  # 19
     sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 20
+    sql += ',[SAP].[dbo].[AAAProveedores].[Referencia]'  # 21
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -634,14 +630,15 @@ def load_dashboar_tree(request):
             Tbody += '	<td>' + str(value[17]) + '</td>'
             Tbody += '	<td>' + str(value[18]) + '</td>'
             Tbody += '	<td>' + str(value[19]) + '</td>'
+            Tbody += '	<td>' + str(value[21]) + '</td>'
 
             if str(value[13]) == 'Si':
-                Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class ="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\''  + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class ="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div></div>'
+                Tbody += ' <td><div class ="text-center" style="cursor:pointer"><div class ="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\''  + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class ="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div></div>'
             else:
-                if str(value[20] == 'Si'):
-                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+                if str(value[20]) == 'Si':
+                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(value[0]) + ',1,' + str(float(value[10]) + float(value[14])) + ',' + str(value[8]) + ');"></div></div>'
                 else:
-                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(value[0]) + ',1,' + str(value[10]) + ',' + str(value[8]) + ');"></div></div>'
+                    Tbody += '  <td><div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(value[0]) + ',\'' + str(value[12]) + '\',1);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(value[3]) + ',\'' + str(value[17]) + '\',\'' + str(value[18]) + '\',\'' + str(value[19]) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(value[0]) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(value[0]) + ',\'' + str(value[9]) + '\',' + str(value[10]) + ',' + str(value[14]) + ',1)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(value[0]) + ',1,' + str(float(value[10]) + float(value[14])) + ',' + str(value[8]) + ');"></div></div>'
 
             Tbody += '</tr>'
         conn.commit()

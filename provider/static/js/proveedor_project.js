@@ -53,7 +53,7 @@ $(document).ready(function() {
     // =================================================================
     //new Switchery(document.getElementById('demo-sw-sz-lg'), { size: 'large' });
     new Switchery(document.getElementById('demo-sw-sz'));
-
+    new Switchery(document.getElementById('demo-sw-szPL'));
 });
 
 function search_provider()
@@ -128,6 +128,7 @@ function search_project()
                 url: '/proveedor-projecto/project/search/',
                 data:{
                         txtSearchProject:$("input[name=txtSearchProject]").val(),
+                        txtAdmin:$("input[name=txtAdmin]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -383,6 +384,36 @@ function set_uncontable()
           $("#txtContable").val('No');
     }
 }
+/*here set the value for Produccion or Local*/
+function set_ProyLocal()
+{
+    $("#txtAdmin").val('Si');
+    if($("#demo-sw-szPL").is(':checked')) {
+            $("#txtAdmin").val('Si');
+            //$("#txtContable").val('No');
+            //$("#DivUnContable").hide();
+    }
+    else{
+          $("#txtAdmin").val('No');
+          //$("#DivUnContable").show();
+    }
+}
+/*Calculo de iva */
+function calculo_iva_fact()
+{
+    var monto = $("#txtMonto").val();
+    var Iva = 0;
+    Iva = monto * .16;
+    $("#txtIva").val(Iva);
+}
+function calculo_contrato_iva()
+{
+    var monto = $("#txtMontoContrato").val();
+    var Iva = 0;
+    Iva = monto * .16;
+    $("#txtIVA").val(Iva);
+}
+
 
 
 
