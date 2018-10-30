@@ -239,3 +239,11 @@ function delete_contract()
             }
             });
 }
+
+function iva_cal()
+{
+    var IVA = 0;
+    IVA = $("#txtMonto").val() * $("#txtPIVA").val();
+    $("#txtIVA").val(IVA);
+
+}

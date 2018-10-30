@@ -50,6 +50,9 @@ def bills_json(month,year,contable):
     sql += ',[SAP].[dbo].[AAAProveedores].[Cuenta]'  # 18
     sql += ',[SAP].[dbo].[AAAProveedores].[Clabe]'  # 19
     sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 20
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Referencia]' #21
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[ISR]' #22
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[ISRIVA]' #23
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -59,18 +62,35 @@ def bills_json(month,year,contable):
     sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdContrato = [SAP].[dbo].[AAAContrato].Id) and'
     sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].IdLider = [Northwind].[dbo].[Usuarios].Id) and'
     sql += '([SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago >= \'' + str(dateMonthStart) + '\' and [SAP].[dbo].[AAAProveedorFacturaPoyecto].FechaPago <= \'' + str(dateMonthEnd) + '\') and [SAP].[dbo].[AAAProveedorFacturaPoyecto].Contable=\'' + str(contable) + '\''
-
+    Ref = ''
+    ISR = ''
+    ISRIVA = ''
     try:
         conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
         cur = conn.cursor()
         cur.execute(sql)
         for value in cur:
+            if str(value[21]) == 'None':
+                Ref = '0'
+            else:
+                Ref = str(value[21])
+
+            if str(value[22]) == 'None':
+                ISR = '0'
+            else:
+                ISR = str(value[22])
+
+            if str(value[23]) == 'None':
+                ISRIVA= '0'
+            else:
+                ISRIVA = str(value[23])
+
             date_small = str(value[12]).split(" ")
             ds = str(date_small[0]).split("-")
             date_format = str(int(ds[2])) + '/' + str(int(ds[1])) + '/' +  str(ds[0])
             amountBills = get_balance(value[1])
             amountBillsTotal = (float(value[15]) + float(value[16])) - float(amountBills)
-            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2].strip()) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4].strip()) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11].strip()) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17].strip()) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + ',"Contable":"' + str(value[20]) + '"},'
+            BillsJson += '{"Id":'+ str(value[0]) + ',"IdContrato":' + str(value[1]) + ',"Contrato":"' + str(value[2].strip()) + '","IdProveedor":' + str(value[3]) + ',"Proveedor":"' + str(value[4].strip()) + '","IdLider":' + str(value[5]) + ',"Nombre":"' + str(value[6]) + '","NumProyecto":' + str(value[8]) + ',"Factura":"' + str(value[9]) + '","Monto":' + str(value[10]) + ',"Concepto":"' + str(value[11].strip()) + '","FechaPago" : "' + str(date_format) + '","Estado":"' + str(value[13])+ '","Iva":' + str(value[14]) + ',"Contrato_Monto":' + str(value[14]) + ',"Contrato_IVA":' + str(value[15]) + ',"Banco":"' + str(value[17].strip()) + '","Cuenta":"' + str(value[18]) + '","Clabe":"' + str(value[19]) + '","Balance":' + str(amountBillsTotal) + ',"Contable":"' + str(value[20]) + '","Referencia":"' + str(Ref) + '","ISR":"' + str(ISR) +  '","ISRIVA":"' + str(ISRIVA) + '"},'
             Key = 1
         conn.commit()
         conn.close()
@@ -108,7 +128,7 @@ def fill_row_with_data2(dJson,seekValue):
             colorbox = 'bg-gray'
             pay = babel.numbers.format_currency(str(vals['Monto']), 'USD', locale='en_US')
             iva = babel.numbers.format_currency(str(vals['Iva']), 'USD', locale='en_US')
-            btwiva = float(vals['Monto']) + float(vals['Iva'])
+            btwiva = (float(vals['Monto']) + float(vals['Iva'])) - (float(vals['ISR']) + float(vals['ISRIVA']))
             bill_whit_iva = babel.numbers.format_currency(str(btwiva), 'USD', locale='en_US')
             EContract = float(vals['Contrato_Monto']) + float(vals['Contrato_IVA'])
             contract_whit_iva = babel.numbers.format_currency(str(EContract), 'USD', locale='en_US')
@@ -124,6 +144,9 @@ def fill_row_with_data2(dJson,seekValue):
             if str(vals['Estado']) == 'Si' and float(vals['Iva']) == 0:
                 colorbox = 'bg-success'
                 payed = bill_whit_iva
+            if str(vals['Estado']) == 'Si' and str(vals['Factura']) == 'Provisionar':
+                colorbox = 'bg-mint'
+                payed = bill_whit_iva
              #Here print the data
             data += '  <div class ="row text-left text-bold"><div class ="col-sm-12">'
             data += '      <div class ="panel media pad-all ' + str(colorbox) + '">'
@@ -133,12 +156,24 @@ def fill_row_with_data2(dJson,seekValue):
             data += '              <p class ="mar-no">' + str(vals['Proveedor']) + '</p>'
             data += '              <p class ="mar-no">Contrato:' + str(contract_whit_iva) + '</p>'
             data += '              <p class ="mar-no">Factura:' + str(vals['Factura']) + '</p>'
+            if str(vals['Referencia']) != '0':
+                data += '        <p class ="mar-no">Ref:' + str(vals['Referencia']) + '</p>'
             data += '              <p class ="mar-no">Monto:' + str(pay) + '</p>'
             data += '              <p class ="mar-no">Iva:' + str(iva) + '</p>'
-            data += '              <p class ="mar-no">Total:' + str(bill_whit_iva) + '</p>'
+
+            if float(vals['ISR']) > 0:
+                isr = babel.numbers.format_currency(str(vals['ISR']), 'USD', locale='en_US')
+                data += '              <p class ="mar-no">ISR:' + str(isr) + '</p>'
+            if float(vals['ISRIVA']) > 0:
+                isriva = babel.numbers.format_currency(str(vals['ISRIVA']), 'USD', locale='en_US')
+                data += '              <p class ="mar-no">ISRIVA:' + str(isriva) + '</p>'
+
             data += '              <p class ="mar-no">Pagado:' + str(payed) + '</p>'
             data += '              <p class ="mar-no">Saldo:' + str(balance) + '</p>'
-            data += '              <p class ="mar-no">&nbsp;</p>'
+
+            data += '            <p class ="mar-no">Total:' + str(bill_whit_iva) + '</p>'
+            data += '            <p class ="mar-no">&nbsp;</p>'
+
             if str(vals['Contable']) == 'Si':
                 if str(vals['Estado']) == 'Si':
                     data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
@@ -666,7 +701,7 @@ def sum_bills_to_pay(seekValue,dJson):
     for vals in dJson['Bills']:
         if vals['FechaPago'] == seekValue:
             if str(vals['Estado']) == 'No':
-                total += float(vals['Monto']) + float(vals['Iva'])
+                total += (float(vals['Monto']) + float(vals['Iva']))  - (float(vals['ISR']) + float(vals['ISRIVA']))
 
     return babel.numbers.format_currency(str(total), 'USD', locale='en_US')
 

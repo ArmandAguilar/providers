@@ -37,8 +37,12 @@ function validate_form()
                                     msjAlert('La clave es necesaria !');
                               }
                               else{
-
-                                    $.ajax({
+                                    if($("#CboPersona option:selected").val() == 'Persona')
+                                    {
+                                        msjAlert('Seleciona tipo de persona !');
+                                    }
+                                    else{
+                                            $.ajax({
                                             type:'POST',
                                             url: '/dashboard/provider/verify/',
                                             data:{
@@ -59,6 +63,8 @@ function validate_form()
                                                     msjError();
                                             }
                                             });
+                                    }
+
                               }
                        }
                       }
@@ -77,11 +83,12 @@ function add_provider()
                 data:{
                         txtProvider:$("input[name=txtProvider]").val(),
                         txtRFC:$("input[name=txtRFC]").val(),
-                        txtBanco:$("input[name=txtBanco").val(),
-                        txtSucursal:$("input[name=txtSucursal").val(),
-                        txtCuenta:$("input[name=txtCuenta").val(),
-                        txtClabe:$("input[name=txtClabe").val(),
-                        txtReferencia:$("input[name=txtReferencia").val(),
+                        txtBanco:$("input[name=txtBanco]").val(),
+                        txtSucursal:$("input[name=txtSucursal]").val(),
+                        txtCuenta:$("input[name=txtCuenta]").val(),
+                        txtClabe:$("input[name=txtClabe]").val(),
+                        txtReferencia:$("input[name=txtReferencia]").val(),
+                        CboPersona:$("#CboPersona option:selected").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -91,11 +98,11 @@ function add_provider()
                        msjSucces('Proveedor registrado con exito !');
                        $("input[name=txtProvider]").val('');
                        $("input[name=txtRFC]").val('');
-                       $("input[name=txtBanco").val('');
-                       $("input[name=txtSucursal").val('');
-                       $("input[name=txtCuenta").val('');
-                       $("input[name=txtClabe").val('');
-                       $("input[name=txtReferencia").val('');
+                       $("input[name=txtBanco]").val('');
+                       $("input[name=txtSucursal]").val('');
+                       $("input[name=txtCuenta]").val('');
+                       $("input[name=txtClabe]").val('');
+                       $("input[name=txtReferencia]").val('');
 
                    }
                    else{
@@ -132,7 +139,7 @@ function search_provider()
                 });
 }
 
-function setValuesEdit(Id,Provider,RFC,Banco,Sucursal,Cuenta,Clabe,Referencia)
+function setValuesEdit(Id,Provider,RFC,Banco,Sucursal,Cuenta,Clabe,Referencia,Persona)
 {
     $("#txtEditId").val('');
     $("#txtProviderEdit").val('');
@@ -151,6 +158,9 @@ function setValuesEdit(Id,Provider,RFC,Banco,Sucursal,Cuenta,Clabe,Referencia)
     $("#txtCuentaEdit").val(Cuenta);
     $("#txtClabeEdit").val(Clabe);
     $("#txtReferenciaEdit").val(Referencia);
+    $("#CboPersonaEdit").val(Persona);
+
+
 
 }
 
@@ -169,6 +179,7 @@ function save_edit()
                     txtCuentaEdit:$("input[name=txtCuentaEdit]").val(),
                     txtClabeEdit:$("input[name=txtClabeEdit]").val(),
                     txtReferenciaEdit:$("input[name=txtReferenciaEdit]").val(),
+                    CboPersonaEdit:$("#CboPersonaEdit option:selected").val(),
                     csrfmiddlewaretoken:$("input[name=csrfmiddlewaretoken]").val(),
                     },
             success:function(data)

@@ -77,7 +77,7 @@ function search_provider()
                 });
 }
 /*Here set names and values for Id of provders*/
-function set_Provider(id,name,banco,cuenta,clabe)
+function set_Provider(id,name,banco,cuenta,clabe,tipo_persona)
 {
     /* here val hidden */
     $("#txtIdProvider").val('');
@@ -113,7 +113,18 @@ function set_Provider(id,name,banco,cuenta,clabe)
     $("#txtCuenta").val(cuenta);
     $("#txtClabe").val(clabe);
 
-
+    /*here set type of person */
+    $("#txtTipoPersona").val(tipo_persona);
+    /*here set the Retetion of tax*/
+    if(tipo_persona == 'Fisica')
+    {
+        $("#DivISR").show();
+        $("#DivISRIVA").show();
+    }
+    else{
+        $("#DivISR").hide();
+        $("#DivISRIVA").hide();
+    }
     /*load all contract of provider sel */
     load_contract();
 
@@ -216,7 +227,7 @@ function new_contract()
                                     txtContrato:$("input[name=txtContrato]").val(),
                                     txtIdProveedor:$("input[name=txtIdProvider]").val(),
                                     txtMonto:$("input[name=txtMontoContrato]").val(),
-                                    txtIVA:$("input[name=txtIVA]").val(),
+                                    txtIVA:$("input[name=txtIVAContrato]").val(),
                                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                                     },
                             success:function(data)
@@ -317,6 +328,9 @@ function save_data()
                         txtConcepto:$("#txtConcepto").val(),
                         txtIva:$("input[name=txtIva]").val(),
                         txtContable:$("input[name=txtContable]").val(),
+                        txtReferencia:$("input[name=txtReferencia]").val(),
+                        txtISR:$("input[name=txtISR]").val(),
+                        txtISRIVA:$("input[name=txtISRIVA]").val(),
                         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                         },
                 success:function(data)
@@ -403,17 +417,22 @@ function calculo_iva_fact()
 {
     var monto = $("#txtMonto").val();
     var Iva = 0;
-    Iva = monto * .16;
+    Iva = monto * $("#txtPIva").val();
     $("#txtIva").val(Iva);
 }
 function calculo_contrato_iva()
 {
     var monto = $("#txtMontoContrato").val();
     var Iva = 0;
-    Iva = monto * .16;
-    $("#txtIVA").val(Iva);
+    Iva = monto * $("#txtPIVAContrato").val();
+    $("#txtIVAContrato").val(Iva);
 }
 
+function calcular_isr()
+{
+    IvaISR = $("#txtISR").val() * $("#txtPIVAContrato").val();
+    $("#txtISRIVA").val(IvaISR);
+}
 
 
 

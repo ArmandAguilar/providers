@@ -74,7 +74,7 @@
 					<!--Searchbox-->
 					<div class="searchbox">
 						<div class="input-group custom-search-form">
-							<input type="text" id="txtSearchContrato" name="txtSearchContrato" class="form-control" placeholder="Search..">
+							<input type="text" id="txtSearchContrato" name="txtSearchContrato" class="form-control" placeholder="Buscar..">
 							<span class="input-group-btn">
 								<button class="text-muted" type="button" onclick="search_contract();"><i class="fa fa-search"></i></button>
 							</span>
@@ -96,6 +96,17 @@
 									{{ form.non_field_errors }}
 									<div class="panel-body">
 										<div class="form-group">
+											<label class="col-sm-3 control-label" >Proveedor</label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																	<input type="text" name = 'txtSearchProvider' id = 'txtSearchProvider' placeholder="Buscar Proveedor..." class="form-control">
+																	<span class="input-group-btn">
+																		<button class="btn btn-info btn-labeled fa fa-search" type="button" onclick="search_provider();">Buscar</button>
+																	</span>
+															</div>
+														</div>
+                                        </div>
+										<div class="form-group">
 											<label class="col-sm-3 control-label" >Contrato</label>
 											<div class="col-sm-9">
 												<input type="text" class="form-control" id="txtContrato" name="txtContrato" placeholder="Contrato ...." >
@@ -104,26 +115,21 @@
 										<div class="form-group">
 											<label class="col-sm-3 control-label" >Monto</label>
 											<div class="col-sm-2">
-												<input type="text" class="form-control" id="txtMonto" name="txtMonto" placeholder="0.0" >
+												<input type="text" class="form-control" id="txtMonto" name="txtMonto" placeholder="0.0" onchange="iva_cal();" >
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label" >%</label>
+											<div class="col-sm-2">
+												<input type="text" class="form-control" id="txtPIVA" name="txtPIVA" value=".16" onchange="iva_cal();">
 											</div>
 										</div>
 										<div class="form-group">
 											<label class="col-sm-3 control-label" >IVA</label>
 											<div class="col-sm-2">
-												<input type="text" class="form-control" id="txtIVA" name="txtIVA" placeholder="0.0" >
+												<input type="text" class="form-control" id="txtIVA" name="txtIVA" placeholder="0.0" onclick="iva_cal();">
 											</div>
 										</div>
-										<div class="form-group">
-														<label class="col-lg-3 control-label">Proveedor</label>
-														<div class="col-lg-7">
-															<div class="input-group mar-btm">
-																	<input type="text" name = 'txtSearchProvider' id = 'txtSearchProvider' placeholder="Buscar ..." class="form-control">
-																	<span class="input-group-btn">
-																		<button class="btn btn-info btn-labeled fa fa-search" type="button" onclick="search_provider();">Buscar</button>
-																	</span>
-															</div>
-														</div>
-                                        </div>
 										<div class="form-group">
 												<div id="lblProvider" class="col-lg-5 control-label"></div>
 												<input type="hidden" id="txtIdProveedor" name="txtIdProveedor" />

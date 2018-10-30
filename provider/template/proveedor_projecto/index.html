@@ -120,6 +120,7 @@
 
 									<!--Form-->
 									<form id="frmProveedersToProyect" name="frmProveedersToProyect" action="" method="post" class="form-horizontal">
+										<input type="hidden" id="txtTipoPersona" name="txtTipoPersona">
 										{% csrf_token %}
 										{{ form.errors }}
 										{{ form.non_field_errors }}
@@ -232,10 +233,34 @@
 														</div>
 													</div>
 													<div class="form-group">
+														<label class="col-lg-3 control-label">IVA%: </label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																	<input type="text" name = 'txtPIva' id = 'txtPIva' value=".16" class="form-control" onchange="calculo_iva_fact();">
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
 														<label class="col-lg-3 control-label">IVA: </label>
 														<div class="col-lg-7">
 															<div class="input-group mar-btm">
 																	<input type="text" name = 'txtIva' id = 'txtIva' placeholder="0.00" class="form-control" onclick="calculo_iva_fact();">
+															</div>
+														</div>
+													</div>
+													<div class="form-group" id="DivISR" style="display:none">
+														<label class="col-lg-3 control-label">ISR: </label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																	<input type="text" name = 'txtISR' id = 'txtISR' value="0" class="form-control" onchange="calcular_isr();">
+															</div>
+														</div>
+													</div>
+													<div class="form-group" id="DivISRIVA" style="display:none">
+														<label class="col-lg-3 control-label">ISR(IVA): </label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																	<input type="text" name = 'txtISRIVA' id = 'txtISRIVA' value="0" class="form-control" onclick="calcular_isr();">
 															</div>
 														</div>
 													</div>
@@ -247,8 +272,16 @@
 															</div>
 														</div>
 													</div>
+													<div class="form-group">
+														<label class="col-lg-3 control-label">Ref.: </label>
+														<div class="col-lg-8">
+															<div class="input-group mar-btm">
+																<input type="text"  name="txtReferencia" id="txtReferencia" placeholder="Ref.." class="form-control">
+															</div>
+														</div>
+													</div>
 													<div class="form-group" id="DivUnContable">
-														<label class="col-lg-3 control-label">Contable: </label>
+														<label class="col-lg-3 control-label">Costo Proyecto: </label>
 														<div class="col-lg-7">
 															<div class="input-group mar-btm" onclick="set_uncontable();">
 																<ul class="list-inline">

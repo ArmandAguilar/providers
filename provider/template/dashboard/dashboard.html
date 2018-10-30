@@ -74,7 +74,7 @@
 					<!--Searchbox-->
 					<div class="searchbox">
 						<div class="input-group custom-search-form">
-							<input type="text" id="txtSearchProvider" name="txtSearchProvider" class="form-control" placeholder="Search..">
+							<input type="text" id="txtSearchProvider" name="txtSearchProvider" class="form-control" placeholder="Buscar Proveedor ...">
 							<span class="input-group-btn">
 								<button class="text-muted" type="button" onclick="search_provider();"><i class="fa fa-search"></i></button>
 							</span>
@@ -137,6 +137,16 @@
 												<input type="text" class="form-control" id="txtReferencia" name="txtReferencia" placeholder="Referencia" >
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-sm-3 control-label">Fiscal</label>
+											<div class="col-sm-9">
+												<select id="CboPersona" name="CboPersona" class="selectpicker">
+					                                <option value="Persona" selected>--- Persona ---</option>
+					                                <option value="Fisica">Fisica</option>
+					                                <option value="Moral">Moral</option>
+					                            </select>
+											</div>
+										</div>
 									</div>
 									<div class="panel-footer text-right">
 										<button class="btn btn-info" type="button" onclick="validate_form();">Guardar</button>
@@ -153,7 +163,7 @@
 							<div class="panel">
 								<div class="panel-heading">
 					                <div class="panel-control"  onclick="Cerrar_tap();">
-					                   <span style="cursor:pointer">Close</span>
+					                   <span style="cursor:pointer">Cerrar</span>
 					                </div>
 					                <h3 class="panel-title">Proveedores encontrados</h3>
 					            </div>
@@ -167,7 +177,6 @@
 											<thead>
 												<tr>
 													<th>Proveedor</th>
-													<th>Proyectos</th>
 													<th>Editar</th>
 												</tr>
 											</thead>

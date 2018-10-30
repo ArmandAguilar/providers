@@ -17,7 +17,7 @@ def search_provider(request):
     tb = ''
     Sql = ''
     if request.method == 'POST':
-        Sql = 'SELECT [Id],[Proveedor],[RFC],[Banco],[Cuenta],[Clabe] FROM [SAP].[dbo].[AAAProveedores] Where [Proveedor] like \'%'+ str(request.POST['txtSearchProvider']) + '%\' or [RFC] like \'%' + str(request.POST['txtSearchProvider']) + '%\''
+        Sql = 'SELECT [Id],[Proveedor],[RFC],[Banco],[Cuenta],[Clabe],[TipoPersona] FROM [SAP].[dbo].[AAAProveedores] Where [Proveedor] like \'%'+ str(request.POST['txtSearchProvider']) + '%\' or [RFC] like \'%' + str(request.POST['txtSearchProvider']) + '%\''
         try:
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
             cur = conn.cursor()
@@ -26,7 +26,7 @@ def search_provider(request):
                 #here html<button >Launch demo modal</button>
                 tb += '<tr>'
                 tb += '<td>' + str(value[1]) + '</td>'
-                tb += '<td><i class="fa fa-check fa-2x" data-target="#modal-edit" data-toggle="modal" style="cursor:pointer" onclick="set_Provider(' + str(value[0]) + ',\'' + str(value[1]) + '\',\'' + str(value[3]) + '\',\'' + str(value[4]) + '\',\'' + str(value[5]) + '\');"></i></td>'
+                tb += '<td><i class="fa fa-check fa-2x" data-target="#modal-edit" data-toggle="modal" style="cursor:pointer" onclick="set_Provider(' + str(value[0]) + ',\'' + str(value[1]) + '\',\'' + str(value[3]) + '\',\'' + str(value[4]) + '\',\'' + str(value[5]) + '\',\'' + str(value[6]) + '\');"></i></td>'
                 tb += '</tr>'
 
             conn.commit()
@@ -109,7 +109,7 @@ def save_data(request):
             t_amount = float(request.POST['txtMonto'])
             verify_status = verify_amount_contract(request.POST['CboContrato'], t_amount)
             if verify_status == 1:
-                Sql = 'INSERT INTO [SAP].[dbo].[AAAProveedorFacturaPoyecto] VALUES (\'' + str(request.POST['CboContrato']) + '\',\'' + str(request.POST['txtIdProvider']) +'\',\'' + str(request.POST['CboLider']) + '\',\'' + str(request.POST['txtIdProject']) + '\',\'' + str(request.POST['txtFactura']) + '\',\'' + str(request.POST['txtMonto']) + '\',\'' + str(request.POST['txtConcepto']) + '\',\'No\',\'' + str(request.POST['txtFechaPago']) + '\',\'' + str(request.POST['txtIva']) + '\',\'' + str(request.POST['txtContable']) + '\')'
+                Sql = 'INSERT INTO [SAP].[dbo].[AAAProveedorFacturaPoyecto] VALUES (\'' + str(request.POST['CboContrato']) + '\',\'' + str(request.POST['txtIdProvider']) +'\',\'' + str(request.POST['CboLider']) + '\',\'' + str(request.POST['txtIdProject']) + '\',\'' + str(request.POST['txtFactura']) + '\',\'' + str(request.POST['txtMonto']) + '\',\'' + str(request.POST['txtConcepto']) + '\',\'No\',\'' + str(request.POST['txtFechaPago']) + '\',\'' + str(request.POST['txtIva']) + '\',\'' + str(request.POST['txtContable']) + '\',\'' + str(request.POST['txtReferencia']) + '\',\'' + str(request.POST['txtISR']) + '\',\'' + str(request.POST['txtISRIVA']) + '\')'
                 conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
                 cur = conn.cursor()
                 cur.execute(Sql)
