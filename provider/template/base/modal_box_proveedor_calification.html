@@ -1,0 +1,69 @@
+{% load staticfiles %}
+<!--Bootstrap Modal without Animation-->
+	<!--===================================================-->
+	<div class="modal" id="modal-like" role="dialog" tabindex="-1" aria-labelledby="demo-default-modal" aria-hidden="true">
+		<div class="modal-dialog modal">
+			<div class="modal-content">
+				<!--Modal header-->
+				<div class="modal-header">
+					<button data-dismiss="modal" class="close" type="button">
+					<span aria-hidden="true">&times;</span>
+					</button>
+					<h4 class="modal-title">Calificar este proveedor</h4>
+				</div>
+				<!--Modal body-->
+				<div class="modal-body" style="height:400px">
+                    <input type="hidden" name="IdProveedorReview" id="IdProveedorReview">
+                    <input type="hidden" name="IdProyectoReview" id="IdProyectoReview">
+                    <input type="hidden" name="IdUserReview" id="IdUserReview" value="{{ request.session.IdUser }}">
+                    <div class="form-group row">
+                            <label class="col-md-2 text-semibold text-main" >Calificación</label>
+                            <div class="col-sm-7">
+
+                                <select id="CboCalificacion" name="CboCalificacion" class="selectpicker">
+                                    <option value="NA" selected>------</option>
+                                    <option value="A">Alto</option>
+                                    <option value="AC">Aceptable</option>
+                                    <option value="B">Bajo</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="form-group row">
+                            <label class="col-md-2 text-semibold text-main" >Calidad</label>
+                            <div class="col-sm-7">
+                                <select id="CboCalidad" name="CboCalidad" class="selectpicker">
+                                    <option value="NA" selected>------</option>
+                                    <option value="B">Buena</option>
+                                    <option value="R">Regular</option>
+                                    <option value="M">Mala</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="form-group row">
+                            <label class="col-md-2 text-semibold text-main">Entrega De Trabajo</label>
+                            <div class="col-sm-7">
+                                <select id="CboEntrega" name="CboEntrega" class="selectpicker">
+                                    <option value="NA" selected>------</option>
+                                    <option value="R">Rapida</option>
+                                    <option value="M">Media</option>
+                                    <option value="N">Nula</option>
+                                </select>
+                            </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-sm-12">
+                            <textarea id="txtComentario" name="txtComentario" placeholder="Escribe un comentario aqui" rows="12" class="form-control"></textarea>
+                        </div>
+                    </div>
+        		</div>
+				<!--Modal footer-->
+				<div class="modal-footer">
+					<button data-dismiss="modal" class="btn btn-primary" onclick="add_review();">Calificar</button>
+					<button data-dismiss="modal" class="btn btn-default" type="button">Cancelar</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
+	<!--===================================================-->
+	<!--End Bootstrap Modal without Animation-->

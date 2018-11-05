@@ -430,7 +430,7 @@ function calculo_contrato_iva()
 
 function calcular_isr()
 {
-    IvaISR = $("#txtISR").val() * $("#txtPIVAContrato").val();
+    IvaISR = $("#txtISR").val() * $("#txtPIva").val();
     $("#txtISRIVA").val(IvaISR);
 }
 

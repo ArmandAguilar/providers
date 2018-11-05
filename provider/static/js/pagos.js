@@ -405,12 +405,12 @@ function save_edit_banco()
 /*here set the value for contable or uncontable*/
 function set_uncontable()
 {
-    $("#txtContable").val('Si');
+    $("#txtContable").val('No');
     if($("#demo-sw-unchecked").is(':checked')) {
-            $("#txtContable").val('Si');
+            $("#txtContable").val('No');
     }
     else{
-          $("#txtContable").val('No');
+          $("#txtContable").val('Si');
     }
 }
 
@@ -528,4 +528,63 @@ function cancel_pay_uncontable()
                 }
            });
 }
+/*here  for rewviews */
+function set_valProveederReview(idProyecto,idProveedor){
+        $("#IdProveedorReview").val('');
+        $("#IdProyectoReview").val('');
+
+        $("#IdProveedorReview").val(idProveedor);
+        $("#IdProyectoReview").val(idProyecto);
+}
+function add_review()
+{
+    if($("#CboCalificacion option:selected").val() == 'NA')
+    {
+        msjAlert(' tienes que selecionar una calificacion');
+    }
+    else{
+        if($("#CboCalidad option:selected").val() == 'NA')
+        {
+            msjAlert(' tienes que selecionar una calidad');
+        }
+        else{
+            if($("#CboEntrega option:selected").val() == 'NA')
+            {
+                msjAlert(' tienes que selecionar una entrega de trabajo');
+            }
+            else{
+                    $.ajax({
+                        type:'POST',
+                        url: '/pagos/review/add/',
+                        data:{
+                                CboCalificacion:$("#CboCalificacion option:selected").val(),
+                                CboCalidad:$("#CboCalidad option:selected").val(),
+                                CboEntrega:$("#CboEntrega option:selected").val(),
+                                txtComentario:$("#txtComentario").val(),
+                                IdProveedorReview:$("input[name=IdProveedorReview]").val(),
+                                IdProyectoReview:$("input[name=IdProyectoReview]").val(),
+                                IdUserReview:$("input[name=IdUserReview]").val(),
+                                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+                                txtuncontable:'No',
+                                },
+                        success:function(data)
+                        {
+                          if (data >= 1)
+                             {
+                                msjSucces(' Proveedor evaluado con exito');
+
+                            }
+                           else{
+                                    msjError();
+                           }
+                        },
+                        error:function(req,e,er) {
+                                msjError();
+                        }
+                   });
+            }
+        }
+    }
+}
+
 load();

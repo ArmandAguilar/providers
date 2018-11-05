@@ -93,7 +93,7 @@
 														<span class="wz-icon icon-txt text-bold">1</span>
 														<i class="wz-icon-done fa fa-check"></i>
 													</span>
-													<small class="wz-desc box-block">Proveedor</small>
+													<small class="box-block">Proveedor</small>
 												</a>
 											</li>
 											<li class="col-xs-4">
@@ -102,7 +102,7 @@
 														<span class="wz-icon icon-txt text-bold">2</span>
 														<i class="wz-icon-done fa fa-check"></i>
 													</span>
-													<small class="wz-desc box-block">Proyecto</small>
+													<small class="box-block">Proyecto</small>
 												</a>
 											</li>
 											<li class="col-xs-4">
@@ -111,7 +111,7 @@
 														<span class="wz-icon icon-txt text-bold">3</span>
 														<i class="wz-icon-done fa fa-check"></i>
 													</span>
-													<small class="wz-desc box-block">Factura</small>
+													<small class="box-block">Factura</small>
 												</a>
 											</li>
 
@@ -213,7 +213,15 @@
 														<label class="col-lg-3 control-label">Monto: </label>
 														<div class="col-lg-7">
 															<div class="input-group mar-btm">
-																	<input type="text" name = 'txtMonto' id = 'txtMonto' placeholder="0.00" class="form-control" value="{{monto}}">
+																	<input type="text" name = 'txtMonto' id = 'txtMonto' placeholder="0.00" class="form-control" value="{{monto}}" onchange="calculo_iva_fact();">
+															</div>
+														</div>
+													</div>
+													<div class="form-group">
+														<label class="col-lg-3 control-label">IVA%: </label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																	<input type="text" name = 'txtPIva' id = 'txtPIva' value=".16" class="form-control" onchange="calculo_iva_fact();">
 															</div>
 														</div>
 													</div>
@@ -221,10 +229,28 @@
 														<label class="col-lg-3 control-label">IVA: </label>
 														<div class="col-lg-7">
 															<div class="input-group mar-btm">
-																	<input type="text" name = 'txtIva' id = 'txtIva' placeholder="0.00" class="form-control" value="{{iva}}">
+																	<input type="text" name = 'txtIva' id = 'txtIva' placeholder="0.00" class="form-control" value="{{iva}}" onclick="calculo_iva_fact();">
 															</div>
 														</div>
 													</div>
+													{% if isr > 0 %}
+															<div class="form-group" id="DivISR">
+																<label class="col-lg-3 control-label">ISR: </label>
+																<div class="col-lg-7">
+																	<div class="input-group mar-btm">
+																			<input type="text" name = 'txtISR' id = 'txtISR' value="{{isr}}" class="form-control" onchange="calcular_isr();">
+																	</div>
+																</div>
+															</div>
+															<div class="form-group" id="DivISRIVA">
+																<label class="col-lg-3 control-label">ISR(IVA): </label>
+																<div class="col-lg-7">
+																	<div class="input-group mar-btm">
+																			<input type="text" name = 'txtISRIVA' id = 'txtISRIVA' value="{{isriva}}" class="form-control" onclick="calcular_isr();">
+																	</div>
+																</div>
+															</div>
+													{% endif %}
 													<div class="form-group">
 														<label class="col-lg-3 control-label">F. Pago:</label>
 														<div class="col-lg-7">
@@ -233,7 +259,14 @@
 															</div>
 														</div>
 													</div>
-
+													<div class="form-group">
+														<label class="col-lg-3 control-label">Referencia:</label>
+														<div class="col-lg-7">
+															<div class="input-group mar-btm">
+																<input type="text"  name="txtReferencia" id="txtReferecia" placeholder="0000-00-00" class="form-control" value="{{ref}}">
+															</div>
+														</div>
+													</div>
 													<div class="form-group">
 														<div class="col-lg-12">
 															<div class="input-group mar-btm">

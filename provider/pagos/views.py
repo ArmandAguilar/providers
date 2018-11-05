@@ -151,7 +151,7 @@ def fill_row_with_data2(dJson,seekValue):
             data += '  <div class ="row text-left text-bold"><div class ="col-sm-12">'
             data += '      <div class ="panel media pad-all ' + str(colorbox) + '">'
             data += '          <div class ="media-body">'
-            data += '              <p class ="mar-no">Lider:' + str(vals['Nombre']) + '</p>'
+            data += '              <p class ="mar-no" data-target="#modal-rank" data-toggle="modal">Lider:' + str(vals['Nombre']) + '</p>'
             data += '              <p class ="mar-no">NoProyecto:' + str(vals['NumProyecto']) + '</p>'
             data += '              <p class ="mar-no">' + str(vals['Proveedor']) + '</p>'
             data += '              <p class ="mar-no">Contrato:' + str(contract_whit_iva) + '</p>'
@@ -176,14 +176,14 @@ def fill_row_with_data2(dJson,seekValue):
 
             if str(vals['Contable']) == 'Si':
                 if str(vals['Estado']) == 'Si':
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-thumbs-o-up fa-lg" data-target="#modal-like" data-toggle="modal" onclick="set_valProveederReview(' + str(vals['NumProyecto']) + ',' + str(vals['IdProveedor']) + ')"></div></div>'
                 else:
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(float(vals['Monto'])  + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills" data-toggle="modal" onclick="setIdForPayStatus(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel" data-toggle="modal" onclick="setIdForCancel(' + str(vals['Id']) + ',1,' + str(float(vals['Monto'])  + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-thumbs-o-up fa-lg"  data-target="#modal-like" data-toggle="modal" onclick="set_valProveederReview(' + str(vals['NumProyecto']) + ',' + str(vals['IdProveedor']) + ')"></div></div>'
             else:
                 if str(vals['Estado']) == 'Si':
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\''  + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk('+ str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-thumbs-o-up fa-lg" data-target="#modal-like" data-toggle="modal" onclick="set_valProveederReview(' + str(vals['NumProyecto']) + ',' + str(vals['IdProveedor']) + ')"></div></div>'
                 else:
-                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(float(vals['Monto']) + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div></div>'
+                    data += '     <div class ="text-center" style="cursor:pointer"><div class="fa fa-calendar fa-lg" data-target="#modal-calendar" data-toggle="modal" onclick="setIdForDate(' + str(vals['Id']) + ',\'' + str(vals['FechaPago']) + '\',0);"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-bank" data-target="#modal-banco" data-toggle="modal" onclick="set_idProviders_bnk(' + str(vals['IdProveedor']) + ',\'' + str(vals['Banco']) + '\',\'' + str(vals['Cuenta']) + '\',\'' + str(vals['Clabe']) + '\'' + ')"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-edit fa-lg" onclick=link_go(\'/pagos/form_edit/bill/' + str(vals['Id']) + '\')></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-check fa-lg" data-target="#modal-bills-uncontable" data-toggle="modal" onclick="setIdForPayStatus_uncontable(' + str(vals['Id']) + ',\'' + str(vals['Factura']) + '\',' + str(vals['Monto']) + ',' + str(vals['Iva']) + ',0)"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-close fa-lg" data-target="#modal-cancel-uncontable" data-toggle="modal" onclick="setIdForCancel_uncontable(' + str(vals['Id']) + ',1,' + str(float(vals['Monto']) + float(vals['Iva'])) + ',' + str(vals['NumProyecto']) + ');"></div>&nbsp;&nbsp;&nbsp;<div class="fa fa-thumbs-o-up fa-lg" data-target="#modal-like" data-toggle="modal" onclick="set_valProveederReview(' + str(vals['NumProyecto']) + ',' + str(vals['IdProveedor']) + ')"></div></div>'
             data += '          </div>'
             data += '      </div>'
             data += '  </div></div>'
@@ -311,6 +311,9 @@ def form_edit_bills(request,id):
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[FechaPago]'#12
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Iva]'  # 13
     sql += ', [SAP].[dbo].[AAAProveedorFacturaPoyecto].[Contable]'  # 14
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[Referencia]'  # 15
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[ISR]'  # 16
+    sql += ',[SAP].[dbo].[AAAProveedorFacturaPoyecto].[ISRIVA]'  # 17
     sql += 'FROM'
     sql += '[SAP].[dbo].[AAAProveedorFacturaPoyecto],'
     sql += '[SAP].[dbo].[AAAProveedores],'
@@ -340,7 +343,10 @@ def form_edit_bills(request,id):
                 'iva': value[13],
                 'concepto':value[11],
                 'fechapago':value[12].strftime("%Y-%m-%d"),
-                'contable':value[14]
+                'contable':value[14],
+                'ref':value[15],
+                'isr':value[16],
+                'isriva':value[17]
             }
         conn.commit()
         conn.close()
@@ -474,6 +480,15 @@ def save_edit(request):
             sql += ', [Iva] = \'' + str(request.POST['txtIva']) + '\''
             sql += ', [Concepto] = \'' + str(request.POST['txtConcepto']) + '\''
             sql += ', [FechaPago] = \'' + str(request.POST['txtFechaPago']) + '\''
+            if 'txtISR' not in request.POST:
+                sql += ', [ISR] = \'0\''
+            else:
+                sql += ', [ISR] = \'' + str(request.POST['txtISR']) + '\''
+            if 'txtISRIVA' not in request.POST:
+                sql += ', [ISRIVA] = \'0\''
+            else:
+                sql += ', [ISRIVA] = \'' + str(request.POST['txtISRIVA']) + '\''
+
             sql += ' WHERE [Id] = \'' + str(request.POST['txtId']) + '\''
 
             conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
@@ -512,6 +527,7 @@ def load_dashboard(request):
     head_date += '<div class ="row text-center">'
     cols_x = 0
     cols_xx = 3
+    off_set = ''
     for cal_value in cal:
         for dia in cal_value:
             if dia > 0:
@@ -520,6 +536,8 @@ def load_dashboard(request):
                     cols_x += 1
     if cols_x > 4:
         cols_xx = 2
+        off_set = 'col-sm-offset-1'
+
     for cal_value in cal:
         for dia in cal_value:
             #Format here the date for dias empty
@@ -533,7 +551,7 @@ def load_dashboard(request):
                 sum_total = sum_bills_to_pay(Fecha, dataJson)
                 #sum_total = 0
                 if DayWeek == 'Friday':
-                    head_date += '  <div class ="col-sm-' + str(cols_xx) + '">'
+                    head_date += '  <div class ="col-sm-' + str(cols_xx) +  ' '  + str(off_set) + '">'
                     head_date += '      <div class="row">'
                     head_date += '          <div class ="panel media pad-all bg-primary">'
                     head_date += '              <div class ="media-body">'
@@ -542,7 +560,7 @@ def load_dashboard(request):
                     head_date += '              </div>'
                     head_date += '          </div>'
                     head_date += '      </div>'
-
+                    off_set = ''
                     gap = fill_row_with_data2(dataJson,Fecha)
                     #gap = ''
                     head_date += str(gap)
@@ -760,3 +778,73 @@ def decrees_charge(NumProy,amount):
         status = 0
     return status
 
+#Here function for califications
+def review_add(request):
+    status = 0
+    if request.method == 'POST':
+        try:
+            if request.POST['txtComentario'] == '':
+                val = 0
+            else:
+                SqlObservaciones = 'INSERT INTO [SAP].[dbo].[AAAProveedoresObservaciones] VALUES (\'' + str(request.POST['IdProyectoReview']) + '\',\'' + str(request.POST['IdProveedorReview']) + '\',\'' + str(request.POST['txtComentario']) + '\',\'' + str(request.POST['IdUserReview']) + '\')'
+                conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
+                cur = conn.cursor()
+                cur.execute(SqlObservaciones)
+                conn.commit()
+                conn.close()
+
+            B = ''
+            R = ''
+            M = ''
+            if (request.POST['CboCalidad'] == 'B'):
+                B = 'B'
+            elif request.POST['CboCalidad'] == 'R':
+                R = 'R'
+            elif request.POST['CboCalidad'] == 'M':
+                M = 'M'
+            SqlCalidadTrabajo = 'INSERT INTO [SAP].[dbo].[AAAProveedorCalidadTrabajo] VALUES (\'' + str(request.POST['IdProyectoReview']) + '\',\'' + str(request.POST['IdProveedorReview']) + '\',\'' + str(request.POST['IdUserReview']) + '\',\'' + str(B) + '\',\'' + str(R) + '\',\'' + str(M) + '\')'
+            conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
+            cur = conn.cursor()
+            cur.execute(SqlCalidadTrabajo)
+            conn.commit()
+            conn.close()
+
+            Rapida = ''
+            Media = ''
+            Nula = ''
+            if (request.POST['CboEntrega'] == 'R'):
+                Rapida = 'R'
+            elif request.POST['CboEntrega'] == 'M':
+                Media = 'M'
+            elif request.POST['CboEntrega'] == 'N':
+                Nula = 'N'
+
+            SqlEntregaTrabajo = 'INSERT INTO [SAP].[dbo].[AAAProveedorEntregaDeTrabajo] VALUES (\'' + str(request.POST['IdProyectoReview']) + '\',\'' + str(request.POST['IdProveedorReview']) + '\',\'' + str(request.POST['IdUserReview']) + '\',\'' + str(Rapida) + '\',\'' + str(Media) + '\',\'' + str(Nula) + '\')'
+            conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
+            cur = conn.cursor()
+            cur.execute(SqlEntregaTrabajo)
+            conn.commit()
+            conn.close()
+
+            Alto = ''
+            Aceptable = ''
+            Bajo = ''
+            if (request.POST['CboCalificacion'] == 'A'):
+                Alto = 'A'
+            elif request.POST['CboCalificacion'] == 'AC':
+                Aceptable = 'AC'
+            elif request.POST['CboCalificacion'] == 'B':
+                Bajo = 'B'
+
+            SqlCalificacion = 'INSERT INTO [SAP].[dbo].[AAAProveedorCalificacion] VALUES (\'' + str(request.POST['IdProyectoReview']) + '\',\'' + str(request.POST['IdProveedorReview']) + '\',\'' + str(request.POST['IdUserReview']) + '\',\'' + str(Alto) + '\',\'' + str(Aceptable) + '\',\'' + str(Bajo) + '\')'
+            conn = pymssql.connect(host=settings.HOSTMSSQL, user=settings.USERMSSQL, password=settings.PASSMSSQL,database=settings.DBMSSQL)
+            cur = conn.cursor()
+            cur.execute(SqlCalificacion)
+            conn.commit()
+            conn.close()
+
+            status = 1
+        except pymssql.Error as e:
+            status = 0
+
+        return HttpResponse(status, content_type="application/liquid charset=utf-8;")

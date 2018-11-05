@@ -258,6 +258,22 @@ function validate_data()
 }
 function save_data()
 {
+    var isr = 0;
+    var isriva = 0;
+    if($("#txtISR").val() == 'undefined')
+    {
+        isr = 0;
+    }
+    else{
+            isr = $("#txtISR").val();
+    }
+    if($("#txtISRIVA").val() == 'undefined')
+    {
+        isriva = 0;
+    }
+    else{
+        isriva = $("#txtISRIVA").val()
+    }
     $.ajax({
             type:'POST',
             url: '/pagos/bills/save_edit/',
@@ -272,6 +288,8 @@ function save_data()
                     txtIva:$("input[name=txtIva]").val(),
                     txtFechaPago:$("input[name=txtFechaPago]").val(),
                     txtConcepto:$("#txtConcepto").val(),
+                    txtISR:isr,
+                    txtISRIVA:isriva,
                     csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                     },
             success:function(data)
@@ -355,4 +373,25 @@ function set_bills()
 {
     $("#txtFactura").val('');
     $("#txtFactura").val('Provisionar');
+}
+/*Calculo de iva */
+function calculo_iva_fact()
+{
+    var monto = $("#txtMonto").val();
+    var Iva = 0;
+    Iva = monto * $("#txtPIva").val();
+    $("#txtIva").val(Iva);
+}
+function calculo_contrato_iva()
+{
+    var monto = $("#txtMontoContrato").val();
+    var Iva = 0;
+    Iva = monto * $("#txtPIVAContrato").val();
+    $("#txtIVAContrato").val(Iva);
+}
+
+function calcular_isr()
+{
+    IvaISR = $("#txtISR").val() * $("#txtPIva").val();
+    $("#txtISRIVA").val(IvaISR);
 }

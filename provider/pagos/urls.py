@@ -14,6 +14,7 @@ urlpatterns = [
     url(r'^pagos/leader/$', views.seek_leader, name='seek_leader'),
     url(r'^pagos/contract/$', views.seek_contract, name='seek_contract'),
     url(r'^pagos/bills/save_edit/$', views.save_edit, name='save_edit'),
+    url(r'^pagos/review/add/$', views.review_add, name='review_add'),
     #url(r'^pagos/provider/bnk/$', views., name=''),
 
 ]
